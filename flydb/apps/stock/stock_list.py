@@ -28,7 +28,7 @@ class StockAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = 'left>FlyDashboard'
+    ORQUESTRA_MENU = 'middle-left>FlyDashboard'
     ORQUESTRA_MENU_ORDER = 1
     ORQUESTRA_MENU_ICON = 'dollar'
 
