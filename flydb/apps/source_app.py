@@ -40,8 +40,8 @@ class SourceAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>LegacySourceAdminApp'
-    ORQUESTRA_MENU_ORDER = 0
+    ORQUESTRA_MENU       = 'left>FlyDashboard'
+    ORQUESTRA_MENU_ORDER = 1
     ORQUESTRA_MENU_ICON  = 'dollar'
     ########################################################
     
