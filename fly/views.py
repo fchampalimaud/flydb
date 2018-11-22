@@ -1,13 +1,9 @@
 from django.http import HttpResponse
-from django.utils import simplejson
-from fly.models import *
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-import datetime
-import socket
-import sys
-
+from .models.stock import Stock
+import simplejson, datetime, socket, sys
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -57,41 +53,6 @@ def findstock(request, barcode):
     except:
         resp = {'result': ("Unexpected error: "+ str(sys.exc_info()) ) }
         
-    return HttpResponse(simplejson.dumps(resp), mimetype='application/json')
-
-@login_required
-def flipnow(request, id):
-
-    try:
-        copy = Copy.objects.get( pk=id )
-        copy.copy_lastflipdate = datetime.datetime.now()
-        copy.save()
-
-        resp = {'result': 'ok', 'copy_lastflipdate': str(copy.copy_lastflipdate) }
-    except ObjectDoesNotExist:
-        resp = {'result': 'notfound'}
-
-    return HttpResponse(simplejson.dumps(resp), mimetype='application/json')
-
-@login_required
-def duplicate(request, id):
-
-    try:
-        copy = Copy.objects.get( pk=id )
-        copy.copy_entrydate = datetime.datetime.now()
-        copy.copy_updated = datetime.datetime.now()
-        copy.pk = None
-        copy.save()
-
-        father = Copy.objects.get( pk=id )
-        copy.source = Source.objects.get(pk=1)
-        copy.copy_src1_copy = father
-        copy.save()
-
-        resp = {'result': 'ok', 'id': copy.pk}
-    except Exception as ex:
-        resp = {'result': 'error', 'msg': ex.args}
-
     return HttpResponse(simplejson.dumps(resp), mimetype='application/json')
 
 #Flip by location
