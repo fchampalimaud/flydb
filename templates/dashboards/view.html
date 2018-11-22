@@ -1,0 +1,47 @@
+{% extends "admin_tools/dashboard/module.html" %}
+{% load i18n %}
+{% block module_content %}
+<ul>
+
+    {% spaceless %}
+    
+    <li>
+        <ul>
+            <li>
+                <a href="{{module.url}}">{{module.title}}</a>
+            </li>
+        </ul>
+        <br/>
+        <div class="results">
+            <table cellspacing="0" id="result_list" width="100%" >
+                <thead>
+                    <tr>
+                        {% for header in module.headers %}
+                            <th scope="col">
+                                {{ header }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in module.children %}
+                    {% if result.form.non_field_errors %}
+                    <tr>
+                        <td colspan="{{ result|length }}">
+                            {{ result.form.non_field_errors }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr class="{% cycle 'row1' 'row2' %}">
+                        {% for item in result %}<td>{{ item }}</td>{% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </li>
+    {% endspaceless %}
+</ul>
+{% endblock %}
+
+
