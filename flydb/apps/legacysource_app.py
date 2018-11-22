@@ -1,7 +1,7 @@
 from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 
-from fly.models import LegacySource
+from flydb.models import LegacySource
 
 class LegacySourceAdminApp(ModelAdminWidget):
     
@@ -10,6 +10,8 @@ class LegacySourceAdminApp(ModelAdminWidget):
     MODEL = LegacySource
     
     TITLE = 'Legacy Sources'
+
+    LIST_DISPLAY = ['legacysource_name']
 
     #list of filters fields
     #LIST_FILTER    = ['stock','legacysource_id','legacysource_name']

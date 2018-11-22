@@ -1,7 +1,7 @@
 from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 
-from fly.models import Location
+from flydb.models import Location
 
 class LocationAdminApp(ModelAdminWidget):
     
@@ -10,6 +10,8 @@ class LocationAdminApp(ModelAdminWidget):
     MODEL = Location
     
     TITLE = 'Cares'
+
+    LIST_DISPLAY = ['location_name']
 
     #list of filters fields
     #LIST_FILTER    = ['stock','location_id','location_name']

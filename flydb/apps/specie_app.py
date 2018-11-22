@@ -1,7 +1,7 @@
 from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 
-from fly.models import Specie
+from flydb.models import Specie
 
 class SpecieAdminApp(ModelAdminWidget):
     
@@ -11,6 +11,7 @@ class SpecieAdminApp(ModelAdminWidget):
     
     TITLE = 'Species'
 
+    LIST_DISPLAY = ['specie_name', 'specie_ncbitax',]
     #list of filters fields
     #LIST_FILTER    = ['stock','specie_id','specie_name','specie_ncbitax']
 

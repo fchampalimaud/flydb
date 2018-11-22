@@ -1,7 +1,7 @@
 from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 
-from fly.models import Supplier
+from flydb.models import Supplier
 
 class SupplierAdminApp(ModelAdminWidget):
     
@@ -10,6 +10,8 @@ class SupplierAdminApp(ModelAdminWidget):
     MODEL = Supplier
     
     TITLE = 'Suppliers'
+
+    LIST_DISPLAY = ['supplier_name', 'supplier_contact', 'supplier_email', 'supplier_url']
 
     #list of filters fields
     #LIST_FILTER    = ['supplier_id','supplier_name','supplier_contact','supplier_email','supplier_url','supplier_address','supplier_notes']

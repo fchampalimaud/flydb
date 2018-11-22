@@ -1,7 +1,7 @@
 from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 
-from fly.models import Source
+from flydb.models import Source
 
 class SourceAdminApp(ModelAdminWidget):
     
@@ -10,6 +10,8 @@ class SourceAdminApp(ModelAdminWidget):
     MODEL = Source
     
     TITLE = 'Sources'
+
+    LIST_DISPLAY = ['source_name']
 
     #list of filters fields
     #LIST_FILTER    = ['source_id','source_name']
