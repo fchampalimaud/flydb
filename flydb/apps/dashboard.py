@@ -13,7 +13,7 @@ class FlyDashboard(BaseWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'middle-left'
+    ORQUESTRA_MENU       = 'left'
     ORQUESTRA_MENU_ICON  = 'dollar'
     ORQUESTRA_MENU_ORDER = 0
     ########################################################
