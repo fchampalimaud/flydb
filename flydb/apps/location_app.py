@@ -17,16 +17,16 @@ class LocationAdminApp(ModelAdminWidget):
     #LIST_FILTER    = ['stock','location_id','location_name']
 
     #list of fields to display in the table
-    #LIST_DISPLAY   = ['stock','location_id','location_name']
+    LIST_DISPLAY   = ['location_name']
     
     #fields to be used in the search
-    #SEARCH_FIELDS  = ['stock','location_id','location_name']
+    SEARCH_FIELDS  = ['location_name__icontains']
     
     #sub models to show in the interface
     #INLINES        = []
     
     #formset of the edit form
-    #FIELDSETS      = ['stock','location_id','location_name']
+    FIELDSETS      = ['location_name']
     
     #read only fields
     #READ_ONLY      = ['stock','location_id','location_name']
@@ -40,9 +40,9 @@ class LocationAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>FlyDashboard'
-    ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON  = 'dollar'
+    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU_ORDER = 4
+    ORQUESTRA_MENU_ICON  = 'h square blue'
     ########################################################
     
     

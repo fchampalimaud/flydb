@@ -17,16 +17,16 @@ class SourceAdminApp(ModelAdminWidget):
     #LIST_FILTER    = ['source_id','source_name']
 
     #list of fields to display in the table
-    #LIST_DISPLAY   = ['source_id','source_name']
+    LIST_DISPLAY   = ['source_name']
     
     #fields to be used in the search
-    #SEARCH_FIELDS  = ['source_id','source_name']
+    SEARCH_FIELDS  = ['source_name__icontains']
     
     #sub models to show in the interface
     #INLINES        = []
     
     #formset of the edit form
-    #FIELDSETS      = ['source_id','source_name']
+    FIELDSETS      = ['source_name']
     
     #read only fields
     #READ_ONLY      = ['source_id','source_name']
@@ -40,9 +40,9 @@ class SourceAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>FlyDashboard'
-    ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON  = 'dollar'
+    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU_ORDER = 5
+    ORQUESTRA_MENU_ICON  = 'map signs orange'
     ########################################################
     
     

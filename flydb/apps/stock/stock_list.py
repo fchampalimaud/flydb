@@ -11,7 +11,7 @@ class StockAdminApp(ModelAdminWidget):
     UID = 'stock-app'
     MODEL = Stock
 
-    TITLE = 'Stocks'
+    TITLE = 'Flies'
 
     LIST_DISPLAY = ['stock_ccuid', 'specie', 'stock_genotype', 'legacysource', 'legacy', 'lab']
     READ_ONLY = ['stock_entrydate', 'stock_updated', 'stock_genotype']
@@ -24,12 +24,15 @@ class StockAdminApp(ModelAdminWidget):
 
     EDITFORM_CLASS = StockFormApp
 
+    USE_DETAILS_TO_EDIT = False
+    USE_DETAILS_TO_ADD = False
+
     ########################################################
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = 'left>FlyDashboard'
+    ORQUESTRA_MENU = 'left'
     ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON = 'dollar'
+    ORQUESTRA_MENU_ICON = 'bug'
 
     ########################################################

@@ -14,19 +14,19 @@ class LegacySourceAdminApp(ModelAdminWidget):
     LIST_DISPLAY = ['legacysource_name']
 
     #list of filters fields
-    #LIST_FILTER    = ['stock','legacysource_id','legacysource_name']
+    #LIST_FILTER    = ['legacysource_name']
 
     #list of fields to display in the table
-    #LIST_DISPLAY   = ['stock','legacysource_id','legacysource_name']
+    LIST_DISPLAY   = ['legacysource_name']
     
     #fields to be used in the search
-    #SEARCH_FIELDS  = ['stock','legacysource_id','legacysource_name']
+    SEARCH_FIELDS  = ['legacysource_name__icontains']
     
     #sub models to show in the interface
     #INLINES        = []
     
     #formset of the edit form
-    #FIELDSETS      = ['stock','legacysource_id','legacysource_name']
+    FIELDSETS      = ['legacysource_name']
     
     #read only fields
     #READ_ONLY      = ['stock','legacysource_id','legacysource_name']
@@ -40,9 +40,9 @@ class LegacySourceAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>FlyDashboard'
-    ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON  = 'dollar'
+    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU_ORDER = 6
+    ORQUESTRA_MENU_ICON  = 'map signs yellow'
     ########################################################
     
     

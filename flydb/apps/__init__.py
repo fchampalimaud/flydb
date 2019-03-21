@@ -5,3 +5,5 @@ from .source_app        import SourceAdminApp
 from .specie_app        import SpecieAdminApp
 from .stock.stock_list  import StockAdminApp
 from .supplier_app      import SupplierAdminApp
+from .group             import GroupAdminApp
+from .category import CategoryAdminApp

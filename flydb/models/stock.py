@@ -8,8 +8,8 @@ class Stock(models.Model):
 
     stock_id        = models.AutoField('Id', primary_key=True)
     stock_ccuid     = models.CharField('CCU ID', max_length=40, blank=True, null=True, unique=True)
-    stock_entrydate = models.DateTimeField('Entry date')
-    stock_updated   = models.DateTimeField('Last update')
+    stock_entrydate = models.DateTimeField('Entry date', auto_now_add=True)
+    stock_updated   = models.DateTimeField('Last update', auto_now=True)
     stock_chrx      = models.CharField('chrX', max_length=60, blank=True, null=True)
     stock_chry      = models.CharField('chrY', max_length=60, blank=True, null=True)
     stock_bal1      = models.CharField('bal1', max_length=60, blank=True, null=True)
@@ -31,6 +31,22 @@ class Stock(models.Model):
     stock_genotype  = models.CharField('Genotype', max_length=255, blank=True, null=True)
     stock_loc1_location = models.CharField('Chamber location', max_length=30, blank=True, null=True,
         help_text='<b>Format:</b> Tray_Row_Col &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( <b>Tray</b> = 1-N <b>Row</b> = A-J <b>Col</b> = 1-10 )')
+
+    wolbachia       = models.BooleanField('Wolbachia')
+    last_test = models.DateField('Last test', null=True, blank=True)
+    treatment = models.CharField('Treatment', null=True, blank=True, max_length=255)
+    strain = models.CharField('Strain', null=True, blank=True, max_length=255)
+
+    virus_treatment = models.BooleanField('Virus Treatment')
+    last_treatment = models.DateField('Last treatment', null=True, blank=True)
+
+    isogenization = models.BooleanField('Isogenization')
+    background = models.CharField('Background', null=True, blank=True, max_length=255)
+    generations = models.CharField('#Generations', null=True, blank=True, max_length=255)
+
+    #stock_category  = models.BooleanField('Stock category')
+
+    category = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL)
 
     stock_loc2_person = models.ForeignKey(User, related_name='stock_loc2_person', blank=True, null=True, verbose_name='User', on_delete=models.SET_NULL)
     specie            = models.ForeignKey('Specie', null=True, on_delete=models.SET_NULL)
