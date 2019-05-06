@@ -53,7 +53,7 @@ class Stock(models.Model):
 
     stock_loc2_person = models.ForeignKey(User, related_name='stock_loc2_person', blank=True, null=True, verbose_name='User', on_delete=models.SET_NULL)
     specie            = models.ForeignKey('Specie', null=True, on_delete=models.SET_NULL)
-    lab               = models.ForeignKey(Group, verbose_name='Ownership', null=True, on_delete=models.SET_NULL)
+    lab               = models.ForeignKey(Group, verbose_name='Ownership', on_delete=models.CASCADE)
     location          = models.ForeignKey('Location', blank=True, null=True, verbose_name='Care', on_delete=models.SET_NULL)
     legacysource      = models.ForeignKey('LegacySource', null=True, verbose_name='Source', on_delete=models.SET_NULL)
 
