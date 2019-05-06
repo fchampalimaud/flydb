@@ -4,14 +4,16 @@ from pyforms_web.widgets.django import ModelFormWidget
 
 from flydb.models import Stock
 from .hospitalization import HospitalizationAdminApp
+from .permissions_list import PermissionsListApp
 
 class StockFormApp(ModelFormWidget):
+
     UID = 'stock-edit-app'
     MODEL = Stock
 
     TITLE = 'Stocks edit'
 
-    INLINES = [HospitalizationAdminApp]
+    INLINES = [HospitalizationAdminApp, PermissionsListApp]
 
     READ_ONLY = ['stock_entrydate', 'stock_updated', 'stock_genotype']
 
@@ -50,7 +52,8 @@ class StockFormApp(ModelFormWidget):
             ('background', 'generations', ' '),
         ),
         'h2:Hospital',
-        'HospitalizationAdminApp'
+        'HospitalizationAdminApp',
+        'PermissionsListApp'
     ]
 
     ########################################################
@@ -64,14 +67,13 @@ class StockFormApp(ModelFormWidget):
 
         self.stock_hospital.label_visible = False
         self.stock_died.label_visible = False
-        self.wolbachia.label_visible=False
-        self.virus_treatment.label_visible=False
-        self.isogenization.label_visible=False
-
+        self.wolbachia.label_visible = False
+        self.virus_treatment.label_visible = False
+        self.isogenization.label_visible = False
 
         self.wolbachia.changed_event = self.__wolbachia_changed_evt
-        self.virus_treatment.changed_event = self.__virus_treatment_changed_evt
         self.isogenization.changed_event = self.__isogenization_changed_evt
+        self.virus_treatment.changed_event = self.__virus_treatment_changed_evt
 
         self.__isogenization_changed_evt()
         self.__wolbachia_changed_evt()

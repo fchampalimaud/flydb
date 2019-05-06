@@ -3,6 +3,7 @@ import datetime, re
 from django.contrib.auth.models import User, Group
 from django.db import models
 
+from .stock_queryset import StockQuerySet
 
 class Stock(models.Model):
 
@@ -34,7 +35,7 @@ class Stock(models.Model):
 
     wolbachia       = models.BooleanField('Wolbachia')
     last_test = models.DateField('Last test', null=True, blank=True)
-    treatment = models.CharField('Treatment', null=True, blank=True, max_length=255)
+    treatment = models.BooleanField('Treatment')
     strain = models.CharField('Strain', null=True, blank=True, max_length=255)
 
     virus_treatment = models.BooleanField('Virus Treatment')
@@ -53,6 +54,8 @@ class Stock(models.Model):
     lab               = models.ForeignKey(Group, verbose_name='Ownership', null=True, on_delete=models.SET_NULL)
     location          = models.ForeignKey('Location', blank=True, null=True, verbose_name='Care', on_delete=models.SET_NULL)
     legacysource      = models.ForeignKey('LegacySource', null=True, verbose_name='Source', on_delete=models.SET_NULL)
+
+    objects = StockQuerySet.as_manager()
 
     class Meta:
         ordering = ['-stock_id', ]
