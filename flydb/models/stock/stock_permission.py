@@ -9,7 +9,7 @@ class StockPermission(models.Model):
     group    = models.ForeignKey('auth.Group', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} - {} - {}".format(str(self.stock), str(self.group), str(self.readonly))
+        return "{} - {} - {}".format(str(self.stock), str(self.group), str(self.viewonly))
 
     class Meta:
         verbose_name = "Stock permission"

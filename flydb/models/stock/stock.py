@@ -1,5 +1,5 @@
 import datetime, re
-
+from .stock_permission import StockPermission
 from django.contrib.auth.models import User, Group
 from django.db import models
 
@@ -30,22 +30,24 @@ class Stock(models.Model):
     stock_hospital  = models.BooleanField('Hospital')
     stock_died      = models.BooleanField('Died')
     stock_genotype  = models.CharField('Genotype', max_length=255, blank=True, null=True)
-    stock_loc1_location = models.CharField('Chamber location', max_length=30, blank=True, null=True,
-        help_text='<b>Format:</b> Tray_Row_Col &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( <b>Tray</b> = 1-N <b>Row</b> = A-J <b>Col</b> = 1-10 )')
+    stock_loc1_location = models.CharField(
+        'Chamber location', max_length=30, blank=True, null=True,
+        help_text='<b>Format:</b> Tray_Row_Col '
+                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                  '( <b>Tray</b> = 1-N <b>Row</b> = A-J <b>Col</b> = 1-10 )'
+    )
 
-    wolbachia       = models.BooleanField('Wolbachia')
+    wolbachia = models.BooleanField('Wolbachia')
     last_test = models.DateField('Last test', null=True, blank=True)
     treatment = models.BooleanField('Treatment')
-    strain = models.CharField('Strain', null=True, blank=True, max_length=255)
+    strain    = models.CharField('Strain', null=True, blank=True, max_length=255)
 
     virus_treatment = models.BooleanField('Virus Treatment')
-    last_treatment = models.DateField('Last treatment', null=True, blank=True)
+    last_treatment  = models.DateField('Last treatment', null=True, blank=True)
 
     isogenization = models.BooleanField('Isogenization')
-    background = models.CharField('Background', null=True, blank=True, max_length=255)
-    generations = models.CharField('#Generations', null=True, blank=True, max_length=255)
-
-    #stock_category  = models.BooleanField('Stock category')
+    background    = models.CharField('Background', null=True, blank=True, max_length=255)
+    generations   = models.CharField('#Generations', null=True, blank=True, max_length=255)
 
     category = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL)
 
@@ -67,14 +69,14 @@ class Stock(models.Model):
 
     def genotype(self):
 
-        if self.stock_chrx.strip() == "" and self.stock_chry.strip() == "" and self.stock_bal1.strip() == "" and \
-                self.stock_chr2.strip() == "" and self.stock_bal2.strip() == "" and \
-                self.stock_chr3.strip() == "" and self.stock_bal3.strip() == "" and \
-                self.stock_chr4.strip() == "":
-            if not self.stock_chru.strip() == "":
-                result = '(' + self.stock_chru + ')'
-            else:
-                result = ''
+        columns = [
+            self.stock_chrx, self.stock_chry,
+            self.stock_chr2, self.stock_chr3, self.stock_chr4,
+            self.stock_bal1, self.stock_bal2, self.stock_bal3
+        ]
+
+        if len([x is None or x.strip()=='' for x in columns])==8:
+            result = '' if (self.stock_chru is None or self.stock_chru.strip()=='') else f"{self.stock_chru}"
         else:
             result = self.stock_chrx
 
@@ -124,14 +126,11 @@ class Stock(models.Model):
 
         return " | ".join(result)
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.stock_entrydate = datetime.datetime.now()
-        self.stock_updated = datetime.datetime.now()
-        self.stock_genotype = self.genotype()
+    """
+    def clean_fields(self, exclude=None):
 
-        if (self.location and self.location.location_id == 1):
-            if (not self.stock_loc1_location):
+        if self.location and self.location.location_id == 1:
+            if not self.stock_loc1_location:
                 raise Exception('You have to complete the stock_loc1_location field')
             else:
                 if (not re.match('([0-9]*)\_([A-J]*)\_([0-9]*)', self.stock_loc1_location)):
@@ -150,5 +149,13 @@ class Stock(models.Model):
                 raise Exception('You have to complete the stock_loc3_data field')
             self.stock_loc2_person = None
             self.stock_loc1_location = None
+    """
 
-        super(Stock, self).save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.stock_genotype = self.genotype()
+        super().save(*args, **kwargs)
+
+        StockPermission.objects.get_or_create(
+            stock=self, group=self.lab, viewonly=False
+        )

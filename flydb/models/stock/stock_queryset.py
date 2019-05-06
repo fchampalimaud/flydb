@@ -1,6 +1,5 @@
 from django.db import models
-
-
+from django.db.models import Q
 
 class StockQuerySet(models.QuerySet):
     """
@@ -11,9 +10,12 @@ class StockQuerySet(models.QuerySet):
         """
         The function filters the queryset to return only the objects the user has permissions to list.
         """
-        return self.filter(
-            stock_permission_set__group__in=user.groups.all()
-        )
+        if user.is_superuser:
+            return self
+        else:
+            return self.filter(
+                Q(stockpermission__group__in=user.groups.all())
+            )
 
     def has_add_permissions(self, user):
         """
@@ -26,24 +28,31 @@ class StockQuerySet(models.QuerySet):
         """
         The function returns a boolean indicating if the user has view permissions to the current queryset.
         """
-        return self.filter(
-            stock_permission_set__group__in=user.groups.all()
-        )
+        if user.is_superuser:
+            return self
+        else:
+            return self.filter(
+                Q(stockpermission__group__in=user.groups.all())
+            )
 
     def has_update_permissions(self, user):
         """
         The function filters the queryset to return only the objects the user has permissions to update.
         """
-        return self.filter(
-            stock_permission_set__group__in=user.groups.all(),
-            stock_permission_set__viewonly=False
-        )
+        if user.is_superuser:
+            return self
+        else:
+            return self.filter(
+                Q(stockpermission__group__in=user.groups.all(), stockpermission__viewonly=False)
+            )
 
     def has_remove_permissions(self, user):
         """
         The function filters the queryset to return only the objects the user has permissions to remove.
         """
-        return self.filter(
-            stock_permission_set__group__in = user.groups.all(),
-            stock_permission_set__viewonly = False
-        )
+        if user.is_superuser:
+            return self
+        else:
+            return self.filter(
+                Q(stockpermission__group__in = user.groups.all(), stockpermission__viewonly = False)
+            )
