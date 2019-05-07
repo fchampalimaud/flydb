@@ -29,7 +29,7 @@ class LegacySourceAdminApp(ModelAdminWidget):
     FIELDSETS      = ['legacysource_name']
     
     #read only fields
-    #READ_ONLY      = ['stock','legacysource_id','legacysource_name']
+    #READ_ONLY      = ['fly','legacysource_id','legacysource_name']
     
     #EDITFORM_CLASS = LegacySourceModelFormWidget    #edit form class
     #CONTROL_LIST   = ControlQueryList #Control to be used in to list the values
@@ -40,7 +40,7 @@ class LegacySourceAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU       = 'left>FlyAdminApp'
     ORQUESTRA_MENU_ORDER = 6
     ORQUESTRA_MENU_ICON  = 'map signs yellow'
     ########################################################

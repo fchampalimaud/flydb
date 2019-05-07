@@ -1,13 +1,11 @@
-from confapp import conf
-from pyforms_web.organizers import segment
 from pyforms_web.widgets.django import ModelAdminWidget
-from flydb.models import StockPermission
+from flydb.models import FlyPermission
 
 
 
 class PermissionsListApp(ModelAdminWidget):
 
-    MODEL = StockPermission
+    MODEL = FlyPermission
     TITLE = 'Permissions'
 
     LIST_DISPLAY = ['group', 'viewonly']

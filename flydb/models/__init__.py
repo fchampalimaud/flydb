@@ -5,5 +5,5 @@ from .specie import Specie
 from .supplier import Supplier
 from .category import Category
 from .hospitalization import Hospitalization
-from .stock.stock import Stock
-from .stock.stock_permission import StockPermission
+from .fly.fly import Fly
+from .fly.fly_permission import FlyPermission

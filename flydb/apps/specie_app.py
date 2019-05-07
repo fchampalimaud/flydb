@@ -13,7 +13,7 @@ class SpecieAdminApp(ModelAdminWidget):
 
     LIST_DISPLAY = ['specie_name', 'specie_ncbitax',]
     #list of filters fields
-    #LIST_FILTER    = ['stock','specie_id','specie_name','specie_ncbitax']
+    #LIST_FILTER    = ['fly','specie_id','specie_name','specie_ncbitax']
 
     #list of fields to display in the table
     LIST_DISPLAY   = ['specie_name','specie_ncbitax']
@@ -28,7 +28,7 @@ class SpecieAdminApp(ModelAdminWidget):
     FIELDSETS      = [('specie_name','specie_ncbitax')]
 
     #read only fields
-    #READ_ONLY      = ['stock','specie_id','specie_name','specie_ncbitax']
+    #READ_ONLY      = ['fly','specie_id','specie_name','specie_ncbitax']
 
     #EDITFORM_CLASS = SpecieModelFormWidget    #edit form class
     #CONTROL_LIST   = ControlQueryList #Control to be used in to list the values
@@ -39,7 +39,7 @@ class SpecieAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU       = 'left>FlyAdminApp'
     ORQUESTRA_MENU_ORDER = 2
     ORQUESTRA_MENU_ICON  = 'dna olive'
     ########################################################

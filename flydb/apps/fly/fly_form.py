@@ -2,47 +2,47 @@ from confapp import conf
 from pyforms_web.organizers import segment
 from pyforms_web.widgets.django import ModelFormWidget
 
-from flydb.models import Stock
+from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
 from .permissions_list import PermissionsListApp
 
-class StockFormApp(ModelFormWidget):
+class FlyFormApp(ModelFormWidget):
 
-    UID = 'stock-edit-app'
-    MODEL = Stock
+    UID = 'fly-edit-app'
+    MODEL = Fly
 
-    TITLE = 'Stocks edit'
+    TITLE = 'Fly stock edit'
 
     INLINES = [HospitalizationAdminApp, PermissionsListApp]
 
-    READ_ONLY = ['stock_entrydate', 'stock_updated', 'stock_genotype']
+    READ_ONLY = ['entrydate', 'updated', 'genotype']
 
     FIELDSETS = [
         segment(
-            ('stock_ccuid', 'specie', 'stock_entrydate', 'stock_updated'),
-            ('legacysource', 'stock_legacy1', 'stock_legacy2', 'stock_legacy3'),
+            ('ccuid', 'specie', 'entrydate', 'updated'),
+            ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
             ('lab', 'category')
         ),
         'h3:Care',
         segment(
-            ('location', 'stock_loc1_location', 'stock_loc2_person', 'stock_loc3_data')
+            ('location', 'loc1_location', 'loc2_person', 'loc3_data')
         ),
         'h3:Genotype',
         segment(
-            'stock_genotype',
-            ('stock_chrx', 'stock_chry', 'stock_bal1'),
-            ('stock_chr2', 'stock_bal2'),
-            ('stock_chr3', 'stock_bal3'),
-            'stock_chr4',
-            'stock_chru'
+            'genotype',
+            ('chrx', 'chry', 'bal1'),
+            ('chr2', 'bal2'),
+            ('chr3', 'bal3'),
+            'chr4',
+            'chru'
         ),
         segment(
-            'stock_print',
-            ('stock_hospital', 'stock_died'),
-            'stock_comments'
+            'print',
+            ('hospital', 'died'),
+            'comments'
         ),
         'h3:More',
-        segment('stock_flydbid'),
+        segment('flydbid'),
         segment(
             'wolbachia',
             ('last_test', 'treatment', 'strain'),
@@ -65,8 +65,8 @@ class StockFormApp(ModelFormWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.stock_hospital.label_visible = False
-        self.stock_died.label_visible = False
+        self.hospital.label_visible = False
+        self.died.label_visible = False
         self.wolbachia.label_visible = False
         self.virus_treatment.label_visible = False
         self.isogenization.label_visible = False

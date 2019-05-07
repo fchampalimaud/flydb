@@ -40,7 +40,7 @@ class SourceAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU       = 'left>FlyAdminApp'
     ORQUESTRA_MENU_ORDER = 5
     ORQUESTRA_MENU_ICON  = 'map signs orange'
     ########################################################

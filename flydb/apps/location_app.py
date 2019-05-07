@@ -14,7 +14,7 @@ class LocationAdminApp(ModelAdminWidget):
     LIST_DISPLAY = ['location_name']
 
     #list of filters fields
-    #LIST_FILTER    = ['stock','location_id','location_name']
+    #LIST_FILTER    = ['fly','location_id','location_name']
 
     #list of fields to display in the table
     LIST_DISPLAY   = ['location_name']
@@ -29,7 +29,7 @@ class LocationAdminApp(ModelAdminWidget):
     FIELDSETS      = ['location_name']
     
     #read only fields
-    #READ_ONLY      = ['stock','location_id','location_name']
+    #READ_ONLY      = ['fly','location_id','location_name']
     
     #EDITFORM_CLASS = LocationModelFormWidget    #edit form class
     #CONTROL_LIST   = ControlQueryList #Control to be used in to list the values
@@ -40,7 +40,7 @@ class LocationAdminApp(ModelAdminWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION      = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU       = 'left>StockAdminApp'
+    ORQUESTRA_MENU       = 'left>FlyAdminApp'
     ORQUESTRA_MENU_ORDER = 4
     ORQUESTRA_MENU_ICON  = 'h square blue'
     ########################################################

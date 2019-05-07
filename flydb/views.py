@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-from .models.stock import Stock
+from .models import Fly
 import simplejson, datetime, socket, sys
 
 def get_client_ip(request):
@@ -14,22 +14,22 @@ def get_client_ip(request):
     return ip
 
 @login_required
-def print_stock_barcode(request, stock_url, returnRequest = True):
+def print_barcode(request, url, returnRequest = True):
     
-    stock = Stock.objects.get( pk = stock_url )
+    stock = Fly.objects.get( pk = url )
     now = datetime.datetime.now()
 
-    if stock.stock_loc1_location!=None:
-        location = stock.stock_loc1_location
+    if stock.loc1_location!=None:
+        location = stock.loc1_location
     else:
         location = ""
         
-    message = "%d|%s|%s|%s|%s|%s|%s|%s" % ( stock.stock_id, stock.stock_ccuid, stock.lab.lab_name, stock.genotype(), now.strftime("%Y-%m-%d"), stock.stock_print , location, stock.stock_legacy1)
+    message = "%d|%s|%s|%s|%s|%s|%s|%s" % ( stock.id, stock.ccuid, stock.lab.lab_name, stock.genotype(), now.strftime("%Y-%m-%d"), stock.print , location, stock.legacy1)
     
     HOST = get_client_ip(request)
     PORT = settings.PRINTER_SERVER_PORT
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-    #print  (HOST, PORT)
+
     s.connect( (HOST, PORT) )    
     s.send(message)
     s.close()
@@ -40,12 +40,12 @@ def print_stock_barcode(request, stock_url, returnRequest = True):
 def findstock(request, barcode):
 
     try:
-        stock = Stock.objects.get( stock_ccuid = barcode )
+        stock = Fly.objects.get( ccuid = barcode )
         if( request.POST.get('autoprint', 'off')=='on' ):
-            print_stock_barcode(request, stock.stock_id, False)
+            print_barcode(request, stock.id, False)
         resp = {'result': 'found',
-                'stock_id': stock.stock_id,
-                'stock_ccu': stock.stock_ccuid,
+                'id': stock.id,
+                'ccu': stock.ccuid,
                 'genotype': str(stock.genotype()).encode('ascii', 'xmlcharrefreplace'),
             }
     except ObjectDoesNotExist:
@@ -60,8 +60,7 @@ def findstock(request, barcode):
 def flipbylocation(request, loc):
 
     try:
-        stock = Stock.objects.get( stock_loc1_location=loc )
-        #flip code
+        stock = Fly.objects.get( loc1_location=loc )
         stock.save()
         resp = {'result': 'ok', 'location': loc }
     except ObjectDoesNotExist:

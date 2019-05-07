@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 
-class StockQuerySet(models.QuerySet):
+class FlyQuerySet(models.QuerySet):
     """
     ORDER QUERYSET MANAGER DEFINITION
     """
@@ -14,7 +14,7 @@ class StockQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(stockpermission__group__in=user.groups.all())
+                Q(flypermission__group__in=user.groups.all())
             )
 
     def has_add_permissions(self, user):
@@ -32,7 +32,7 @@ class StockQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(stockpermission__group__in=user.groups.all())
+                Q(flypermission__group__in=user.groups.all())
             )
 
     def has_update_permissions(self, user):
@@ -43,7 +43,7 @@ class StockQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(stockpermission__group__in=user.groups.all(), stockpermission__viewonly=False)
+                Q(flypermission__group__in=user.groups.all(), flypermission__viewonly=False)
             )
 
     def has_remove_permissions(self, user):
@@ -54,5 +54,5 @@ class StockQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(stockpermission__group__in = user.groups.all(), stockpermission__viewonly = False)
+                Q(flypermission__group__in = user.groups.all(), flypermission__viewonly = False)
             )
