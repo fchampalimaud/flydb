@@ -1,12 +1,12 @@
-from django.contrib.auth.models import User, Group
 from django.db import models
 
 class FlyBase(models.Model):
 
     id        = models.AutoField('Id', primary_key=True)
-    ccuid     = models.CharField('CCU ID', max_length=40, blank=True, null=True, unique=True)
-    entrydate = models.DateTimeField('Entry date', auto_now_add=True)
-    updated   = models.DateTimeField('Last update', auto_now=True)
+
+    created   = models.DateTimeField('Created', auto_now_add=True)
+    modified  = models.DateTimeField('Updated', auto_now=True)
+
     chrx      = models.CharField('chrX', max_length=60, blank=True, null=True)
     chry      = models.CharField('chrY', max_length=60, blank=True, null=True)
     bal1      = models.CharField('bal1', max_length=60, blank=True, null=True)
@@ -16,9 +16,6 @@ class FlyBase(models.Model):
     bal3      = models.CharField('bal3', max_length=60, blank=True, null=True)
     chr4      = models.CharField('chr4', max_length=60, blank=True, null=True)
     chru      = models.CharField('chrU', max_length=60, blank=True, null=True)
-    comments  = models.TextField('comments', blank=True, null=True)
-    print     = models.CharField('Comment to print', max_length=30, blank=True, null=True, default='')
-    loc3_data = models.CharField('Local', max_length=30, blank=True, null=True)
     legacy1   = models.CharField('Legacy ID 1', max_length=30, blank=True, null=True)
     legacy2   = models.CharField('Legacy ID 2', max_length=30, blank=True, null=True)
     legacy3   = models.CharField('Legacy ID 3', max_length=30, blank=True, null=True)
@@ -26,35 +23,11 @@ class FlyBase(models.Model):
     hospital  = models.BooleanField('Hospital')
     died      = models.BooleanField('Died')
     genotype  = models.CharField('Genotype', max_length=255, blank=True, null=True)
-    loc1_location = models.CharField(
-        'Chamber location', max_length=30, blank=True, null=True,
-        help_text='<b>Format:</b> Tray_Row_Col '
-                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
-                  '( <b>Tray</b> = 1-N <b>Row</b> = A-J <b>Col</b> = 1-10 )'
-    )
 
-    wolbachia = models.BooleanField('Wolbachia')
-    last_test = models.DateField('Last test', null=True, blank=True)
-    treatment = models.BooleanField('Treatment')
-    strain    = models.CharField('Strain', null=True, blank=True, max_length=255)
-
-    virus_treatment = models.BooleanField('Virus Treatment')
-    last_treatment  = models.DateField('Last treatment', null=True, blank=True)
-
-    isogenization = models.BooleanField('Isogenization')
-    background    = models.CharField('Background', null=True, blank=True, max_length=255)
-    generations   = models.CharField('#Generations', null=True, blank=True, max_length=255)
-
-    category = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL)
-
-    loc2_person  = models.ForeignKey(User, related_name='loc2_person', blank=True, null=True, verbose_name='User', on_delete=models.SET_NULL)
+    category     = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL)
     specie       = models.ForeignKey('Specie', null=True, on_delete=models.SET_NULL)
-    lab          = models.ForeignKey(Group, verbose_name='Ownership', on_delete=models.CASCADE)
-    location     = models.ForeignKey('Location', blank=True, null=True, verbose_name='Care', on_delete=models.SET_NULL)
-    legacysource = models.ForeignKey('LegacySource', null=True, verbose_name='Source', on_delete=models.SET_NULL)
 
-    created  = models.DateTimeField('Created', auto_now_add=True)
-    modified = models.DateTimeField('Updated', auto_now=True)
+
 
     class Meta:
         ordering = ['-id', ]
@@ -111,18 +84,7 @@ class FlyBase(models.Model):
 
         return result
 
-    def legacy(self):
-        result = []
-        if self.legacy1:
-            result.append(self.legacy1)
 
-        if self.legacy2:
-            result.append(self.legacy2)
-
-        if self.legacy3:
-            result.append(self.legacy3)
-
-        return " | ".join(result)
 
     """
     def clean_fields(self, exclude=None):
