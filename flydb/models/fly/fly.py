@@ -4,6 +4,7 @@ from .fly_base import FlyBase
 from django.db import models
 
 class Fly(FlyBase):
+    public = models.BooleanField('Public', default=False)
 
     ccuid = models.CharField('CCU ID', max_length=40, blank=True, null=True, unique=True)
     comments = models.TextField('comments', blank=True, null=True)
@@ -54,4 +55,4 @@ class Fly(FlyBase):
         super().save(*args, **kwargs)
 
         if self.lab is not None:
-            FlyPermission.objects.get_or_create(stock=self, group=self.lab, viewonly=False)
+            FlyPermission.objects.get_or_create(fly=self, group=self.lab, viewonly=False)

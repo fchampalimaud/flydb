@@ -18,6 +18,7 @@ class FlyFormApp(ModelFormWidget):
     READ_ONLY = ['entrydate', 'updated', 'genotype']
 
     FIELDSETS = [
+        'public',
         segment(
             ('ccuid', 'specie', 'entrydate', 'updated'),
             ('legacysource', 'legacy1', 'legacy2', 'legacy3'),

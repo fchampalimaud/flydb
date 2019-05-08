@@ -34,5 +34,4 @@ class FlyAdminApp(ModelAdminWidget):
     ORQUESTRA_MENU = 'left'
     ORQUESTRA_MENU_ORDER = 1
     ORQUESTRA_MENU_ICON = 'bug'
-
     ########################################################
