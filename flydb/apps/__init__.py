@@ -1,4 +1,4 @@
-from .dashboard         import FlyDashboard
+#from .dashboard         import FlyDashboard
 from .legacysource_app  import LegacySourceAdminApp
 from .location_app      import LocationAdminApp
 from .source_app        import SourceAdminApp
