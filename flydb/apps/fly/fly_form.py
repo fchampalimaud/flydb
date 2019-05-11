@@ -1,6 +1,7 @@
 from confapp import conf
-from pyforms_web.organizers import segment
+from pyforms_web.organizers import segment, no_columns
 from pyforms_web.widgets.django import ModelFormWidget
+from pyforms_web.allcontrols import ControlButton, ControlText
 
 from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
@@ -8,7 +9,6 @@ from .permissions_list import PermissionsListApp
 
 class FlyFormApp(ModelFormWidget):
 
-    UID = 'fly-edit-app'
     MODEL = Fly
 
     TITLE = 'Fly stock edit'
@@ -18,42 +18,36 @@ class FlyFormApp(ModelFormWidget):
     READ_ONLY = ['entrydate', 'updated', 'genotype']
 
     FIELDSETS = [
-        'public',
-        segment(
-            ('ccuid', 'specie', 'entrydate', 'updated'),
-            ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
-            ('lab', 'category')
-        ),
+        no_columns('internal_id', 'lab', 'responsible', 'category', ' ', 'public'),
+        no_columns('genotype', 'location'),
         'h3:Care',
         segment(
-            ('location', 'loc1_location', 'loc2_person', 'loc3_data')
+            ('wolbachia','last_test', 'treatment', 'strain'),
+            ('virus_treatment','last_treatment', ' ', ' '),
+            ('isogenization','background', 'generations', ' '),
+            'died',
+            ' ',
+            'HospitalizationAdminApp',
+        ),
+        'h3:Source',
+        segment(
+            ('legacysource', 'legacy1', 'legacy2', 'legacy3')
+        ),
+        'h3:Extra info',
+        segment(
+            ('print','flydbid'),
+            'comments'
         ),
         'h3:Genotype',
         segment(
-            'genotype',
+            'specie',
+            no_columns('_new_genotype', '_set_genotype'),
             ('chrx', 'chry', 'bal1'),
             ('chr2', 'bal2'),
             ('chr3', 'bal3'),
             'chr4',
             'chru'
         ),
-        segment(
-            'print',
-            ('hospital', 'died'),
-            'comments'
-        ),
-        'h3:More',
-        segment('flydbid'),
-        segment(
-            'wolbachia',
-            ('last_test', 'treatment', 'strain'),
-            'virus_treatment',
-            ('last_treatment', ' ', ' '),
-            'isogenization',
-            ('background', 'generations', ' '),
-        ),
-        'h2:Hospital',
-        'HospitalizationAdminApp',
         'PermissionsListApp'
     ]
 
@@ -64,9 +58,16 @@ class FlyFormApp(ModelFormWidget):
     ########################################################
 
     def __init__(self, *args, **kwargs):
+
+        self._set_genotype = ControlButton(
+            'Update genotype',
+            default=self.__update_genotype_evt,
+            css='basic blue'
+        )
+        self._new_genotype = ControlText('New genotype', visible=False)
+
         super().__init__(*args, **kwargs)
 
-        self.hospital.label_visible = False
         self.died.label_visible = False
         self.wolbachia.label_visible = False
         self.virus_treatment.label_visible = False
@@ -79,6 +80,27 @@ class FlyFormApp(ModelFormWidget):
         self.__isogenization_changed_evt()
         self.__wolbachia_changed_evt()
         self.__virus_treatment_changed_evt()
+
+
+    def set_genotype(self, genotype_txt):
+        """
+        Update the genotype fields from the full genotype label
+        :param genotype_txt:
+        :return:
+        """
+        raise Exception('Wrong genotype')
+
+    def __update_genotype_evt(self):
+        if self._new_genotype.visible:
+            if self._new_genotype.value:
+                try:
+                    self.set_genotype(self._new_genotype.value)
+                    self._new_genotype.hide()
+                except Exception as e:
+                    self.alert(str(e), 'Error parsing genotype text')
+                    self._new_genotype.value = ''
+        else:
+            self._new_genotype.show()
 
     def __wolbachia_changed_evt(self):
         if self.wolbachia.value:
@@ -103,3 +125,10 @@ class FlyFormApp(ModelFormWidget):
         else:
             self.background.hide()
             self.generations.hide()
+
+    @property
+    def title(self):
+        if self.object_pk is None:
+            return 'Created'
+        else:
+            return str(self.model_object)

@@ -14,7 +14,8 @@ class FlyQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(flypermission__group__in=user.groups.all())
+                Q(flypermission__group__in=user.groups.all()) |
+                Q(responsible=user)
             )
 
     def has_add_permissions(self, user):
@@ -32,7 +33,8 @@ class FlyQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(flypermission__group__in=user.groups.all())
+                Q(flypermission__group__in=user.groups.all()) |
+                Q(responsible=user)
             )
 
     def has_update_permissions(self, user):
@@ -43,7 +45,8 @@ class FlyQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(flypermission__group__in=user.groups.all(), flypermission__viewonly=False)
+                Q(flypermission__group__in=user.groups.all(), flypermission__viewonly=False) |
+                Q(responsible=user)
             )
 
     def has_remove_permissions(self, user):
@@ -54,5 +57,6 @@ class FlyQuerySet(models.QuerySet):
             return self
         else:
             return self.filter(
-                Q(flypermission__group__in = user.groups.all(), flypermission__viewonly = False)
+                Q(flypermission__group__in = user.groups.all(), flypermission__viewonly = False) |
+                Q(responsible=user)
             )

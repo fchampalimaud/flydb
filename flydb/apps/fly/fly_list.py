@@ -11,15 +11,14 @@ class FlyAdminApp(ModelAdminWidget):
 
     TITLE = 'Flies'
 
-    LIST_DISPLAY = ['ccuid', 'specie', 'genotype', 'legacysource', 'legacy', 'lab']
+    LIST_DISPLAY = ['internal_id', 'specie', 'genotype', 'legacysource', 'legacy', 'lab', 'location']
     READ_ONLY    = ['entrydate', 'updated', 'genotype']
-    LIST_FILTER  = ['legacysource__legacysource_name', 'specie', 'hospital', 'died', 'lab', 'location']
+    LIST_FILTER  = ['legacysource__legacysource_name', 'specie', 'died', 'lab']
 
     SEARCH_FIELDS = [
-        'ccuid', 'legacy1', 'legacy2', 'legacy3',
-        'genotype', 'chrx', 'chry', 'bal1', 'chr2', 'bal2',
-        'chr3', 'bal3', 'chr4', 'chru', 'loc1_location', 'loc3_data',
-        'comments'
+        'internal_id__icontains', 'legacy1__icontains', 'legacy2__icontains', 'legacy3__icontains',
+        'genotype__icontains', 'location__icontains',
+        'comments__icontains'
     ]
 
     EDITFORM_CLASS = FlyFormApp
