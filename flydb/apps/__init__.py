@@ -8,19 +8,19 @@ class FlyDBConfig(AppConfig):
     def ready(self):
         # from .dashboard import FlyDashboard
         from .fly.fly_list import FlyApp
+        from .species import FlySpeciesApp
         from .categories import FlyCategoryApp
         from .legacysources import FlyLegacySourceApp
         from .sources import FlySourceApp
         # from .location_app import LocationAdminApp
-        from .specie_app import SpecieAdminApp
         # from .supplier_app import SupplierAdminApp  # FIXME no data -> delete
         # from .group import GroupAdminApp
 
         global FlyApp
+        global FlySpeciesApp
         global FlyCategoryApp
         global FlyLegacySourceApp
         global FlySourceApp
         # global LocationAdminApp
-        global SpecieAdminApp
         global SupplierAdminApp
         # global GroupAdminApp
