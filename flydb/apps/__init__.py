@@ -9,7 +9,7 @@ class FlyDBConfig(AppConfig):
         # from .dashboard import FlyDashboard
         from .fly.fly_list import FlyApp
         from .categories import FlyCategoryApp
-        from .legacysource_app import LegacySourceAdminApp
+        from .legacysources import FlyLegacySourceApp
         # from .location_app import LocationAdminApp
         from .source_app import SourceAdminApp
         from .specie_app import SpecieAdminApp
@@ -17,7 +17,7 @@ class FlyDBConfig(AppConfig):
         # from .group import GroupAdminApp
 
         global FlyApp
-        global LegacySourceAdminApp
+        global FlyLegacySourceApp
         global FlyCategoryApp
         # global LocationAdminApp
         global SourceAdminApp
