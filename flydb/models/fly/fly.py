@@ -4,6 +4,8 @@ from django.db import models
 
 class Fly(models.Model):
 
+    # FIXME difference between internal id and flydb id ???
+
     id          = models.AutoField('Id', primary_key=True)
     internal_id = models.CharField('Internal ID', max_length=40, blank=True, null=True, unique=True)
     created     = models.DateTimeField('Created', auto_now_add=True)

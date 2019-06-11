@@ -2,35 +2,55 @@ from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 from flydb.models import Fly
 
-from .fly_form import FlyFormApp
+from .fly_form import FlyForm
 
 
-class FlyAdminApp(ModelAdminWidget):
-    UID = 'fly-app'
+class FlyApp(ModelAdminWidget):
+
+    UID = "flydb"
     MODEL = Fly
 
-    TITLE = 'Flies'
+    TITLE = "Flies"
 
-    LIST_DISPLAY = ['internal_id', 'specie', 'genotype', 'legacysource', 'legacy', 'lab', 'location']
-    READ_ONLY    = ['entrydate', 'updated', 'genotype']
-    LIST_FILTER  = ['legacysource__legacysource_name', 'specie', 'died', 'lab']
+    EDITFORM_CLASS = FlyForm
 
-    SEARCH_FIELDS = [
-        'internal_id__icontains', 'legacy1__icontains', 'legacy2__icontains', 'legacy3__icontains',
-        'genotype__icontains', 'location__icontains',
-        'comments__icontains'
+    LIST_DISPLAY = [
+        "internal_id",
+        "specie",
+        "genotype",
+        "legacysource",
+        "legacy",
+        "lab",
+        "location",
     ]
 
-    EDITFORM_CLASS = FlyFormApp
+    LIST_FILTER = ["legacysource__legacysource_name", "specie", "died", "lab"]
+
+    SEARCH_FIELDS = [
+        "internal_id__icontains",
+        "legacy1__icontains",
+        "legacy2__icontains",
+        "legacy3__icontains",
+        "genotype__icontains",
+        "location__icontains",
+        "comments__icontains",
+    ]
+
+    READ_ONLY = ["entrydate", "updated", "genotype"]
 
     USE_DETAILS_TO_EDIT = False
-    USE_DETAILS_TO_ADD = False
 
-    ########################################################
-    #### ORQUESTRA CONFIGURATION ###########################
-    ########################################################
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = 'left'
+    ORQUESTRA_MENU = "left"
     ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON = 'bug red'
-    ########################################################
+    ORQUESTRA_MENU_ICON = "bug red"
+
+    @classmethod
+    def has_permissions(cls, user):
+        if user.is_superuser:
+            return True
+
+        if user.groups.filter(name="Fly Facility").exists():
+            return True
+
+        return False

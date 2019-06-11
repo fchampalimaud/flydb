@@ -34,7 +34,7 @@ class HospitalizationAdminApp(ModelAdminWidget):
 
     MODEL = Hospitalization
 
-    TITLE = 'Hospitalization'
+    TITLE = 'Special Care'
 
     LIST_DISPLAY = ['begin', 'end']
 

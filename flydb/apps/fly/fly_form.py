@@ -1,61 +1,55 @@
 from confapp import conf
 from pyforms_web.organizers import segment, no_columns
+from pyforms_web.web.middleware import PyFormsMiddleware
 from pyforms_web.widgets.django import ModelFormWidget
 from pyforms_web.allcontrols import ControlButton, ControlText
 
-from flydb.models import Fly
+# from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
-from .permissions_list import PermissionsListApp
+# from .permissions_list import PermissionsListApp
 
-class FlyFormApp(ModelFormWidget):
 
-    MODEL = Fly
-
-    TITLE = 'Fly stock edit'
-
-    INLINES = [HospitalizationAdminApp, PermissionsListApp]
-
-    READ_ONLY = ['entrydate', 'updated', 'genotype']
+class FlyForm(ModelFormWidget):
 
     FIELDSETS = [
-        no_columns('internal_id', 'lab', 'responsible', 'category', ' ', 'public'),
-        no_columns('genotype', 'location'),
-        'h3:Care',
+        'public',
+        ('flydbid', 'category', 'location'),
         segment(
             ('wolbachia','last_test', 'treatment', 'strain'),
-            ('virus_treatment','last_treatment', ' ', ' '),
-            ('isogenization','background', 'generations', ' '),
+            ('virus_treatment', 'last_treatment', ' ', ' '),
+            ('isogenization', 'background', 'generations', ' '),
             'died',
             ' ',
             'HospitalizationAdminApp',
         ),
-        'h3:Source',
+        'h3:Previous IDs',
         segment(
             ('legacysource', 'legacy1', 'legacy2', 'legacy3')
-        ),
-        'h3:Extra info',
-        segment(
-            ('print','flydbid'),
-            'comments'
         ),
         'h3:Genotype',
         segment(
             'specie',
-            no_columns('_new_genotype', '_set_genotype'),
+            # no_columns('_new_genotype', '_set_genotype'),
             ('chrx', 'chry', 'bal1'),
             ('chr2', 'bal2'),
             ('chr3', 'bal3'),
             'chr4',
             'chru'
         ),
-        'PermissionsListApp'
+        'print',
+        'comments',
+        # ('responsible', 'lab'),
+        # 'PermissionsListApp'
     ]
 
-    ########################################################
-    #### ORQUESTRA CONFIGURATION ###########################
-    ########################################################
+    READ_ONLY = ['entrydate', 'updated', 'genotype']
+
+    INLINES = [
+        HospitalizationAdminApp,
+        # PermissionsListApp,
+    ]
+
     LAYOUT_POSITION = conf.ORQUESTRA_NEW_TAB
-    ########################################################
 
     def __init__(self, *args, **kwargs):
 
@@ -80,7 +74,6 @@ class FlyFormApp(ModelFormWidget):
         self.__isogenization_changed_evt()
         self.__wolbachia_changed_evt()
         self.__virus_treatment_changed_evt()
-
 
     def set_genotype(self, genotype_txt):
         """
@@ -128,7 +121,13 @@ class FlyFormApp(ModelFormWidget):
 
     @property
     def title(self):
-        if self.object_pk is None:
-            return 'Created'
-        else:
-            return str(self.model_object)
+        try:
+            return str(self.model_object)  # FIXME use internal_id or something
+        except AttributeError:
+            pass  # apparently it defaults to App TITLE
+
+    def get_fieldsets(self, default):
+        user = PyFormsMiddleware.user()
+        if user.is_superuser:
+            default += [("responsible", "lab"),]
+        return default
