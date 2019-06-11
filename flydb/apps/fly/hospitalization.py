@@ -1,7 +1,7 @@
 from confapp import conf
 from django.contrib.auth.models import User
 from pyforms_web.web.middleware import PyFormsMiddleware
-from notifications.tools import notify
+# from notifications.tools import notify
 from pyforms_web.widgets.django import ModelAdminWidget
 from pyforms_web.widgets.django import ModelFormWidget
 from flydb.models import Hospitalization
@@ -23,8 +23,8 @@ class HospiForm(ModelFormWidget):
             title = 'To many hospitalizations in the last 6 months.'
             self.parent.warning( msg, title )
 
-            for user in User.objects.filter(is_superuser=True):
-                notify(title, msg, user=user)
+            # for user in User.objects.filter(is_superuser=True):
+            #     notify(title, msg, user=user)
 
         return res
 
