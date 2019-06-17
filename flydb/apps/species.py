@@ -21,6 +21,8 @@ class FlySpeciesApp(ModelAdminWidget):
 
     EDITFORM_CLASS = FlySpeciesForm
 
+    # LIST_DISPLAY = ["specie_name", "specie_ncbitax"]
+
     USE_DETAILS_TO_ADD = False  # required to have form in NEW_TAB
     USE_DETAILS_TO_EDIT = False  # required to have form in NEW_TAB
 
