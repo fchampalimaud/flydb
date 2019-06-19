@@ -1,6 +1,6 @@
 from django.conf import settings
 from .fly_permission import FlyPermission
-from .fly_queryset import FlyQuerySet
+# from .fly_queryset import FlyQuerySet
 from django.db import models
 
 class Fly(models.Model):
@@ -75,7 +75,7 @@ class Fly(models.Model):
 
 
 
-    objects = FlyQuerySet.as_manager()
+    # objects = FlyQuerySet.as_manager()
 
     class Meta:
         ordering = ['-id', ]
