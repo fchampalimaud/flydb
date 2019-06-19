@@ -11,17 +11,17 @@ class Fly(models.Model):
     created     = models.DateTimeField('Created', auto_now_add=True)
     modified    = models.DateTimeField('Updated', auto_now=True)
     public      = models.BooleanField('Public', default=False)
-    lab         = models.ForeignKey('auth.Group', verbose_name='Ownership', on_delete=models.CASCADE)
+    # lab         = models.ForeignKey('auth.Group', verbose_name='Ownership', on_delete=models.CASCADE)
     comments    = models.TextField('comments', blank=True, null=True)
     print       = models.CharField('Comment to print', max_length=30, blank=True, null=True, default='')
     location    = models.CharField(
                     'Location', max_length=50, blank=True, null=True,
                     help_text='Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )'
                   )
-    responsible = models.ForeignKey('auth.User',
-                    blank=True, null=True, verbose_name='Resposible',
-                    on_delete=models.SET_NULL
-                  )
+    # responsible = models.ForeignKey('auth.User',
+    #                 blank=True, null=True, verbose_name='Resposible',
+    #                 on_delete=models.SET_NULL
+    #               )
 
     ####################################################################
     #### Genotype ######################################################
@@ -176,5 +176,5 @@ class Fly(models.Model):
         self.genotype = self.get_genotype()
         super().save(*args, **kwargs)
 
-        if self.lab is not None:
-            FlyPermission.objects.get_or_create(fly=self, group=self.lab, viewonly=False)
+        # if self.lab is not None:
+        #     FlyPermission.objects.get_or_create(fly=self, group=self.lab, viewonly=False)
