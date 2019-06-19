@@ -127,7 +127,7 @@ class FlyForm(ModelFormWidget):
             pass  # apparently it defaults to App TITLE
 
     def get_fieldsets(self, default):
-        user = PyFormsMiddleware.user()
-        if user.is_superuser:
-            default += [("responsible", "lab"),]
+        # user = PyFormsMiddleware.user()
+        # if user.is_superuser:
+        #     default += [("responsible", "lab"),]
         return default
