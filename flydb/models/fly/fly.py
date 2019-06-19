@@ -1,3 +1,4 @@
+from django.conf import settings
 from .fly_permission import FlyPermission
 from .fly_queryset import FlyQuerySet
 from django.db import models
@@ -22,6 +23,9 @@ class Fly(models.Model):
     #                 blank=True, null=True, verbose_name='Resposible',
     #                 on_delete=models.SET_NULL
     #               )
+
+    maintainer = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True)
+    ownership = models.ForeignKey(to="auth.Group", on_delete=models.PROTECT, null=True, blank=True)
 
     ####################################################################
     #### Genotype ######################################################
