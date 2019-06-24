@@ -1,81 +1,93 @@
 from django.conf import settings
-from .fly_permission import FlyPermission
-# from .fly_queryset import FlyQuerySet
 from django.db import models
+
+from .fly_permission import FlyPermission
+
+# from .fly_queryset import FlyQuerySet
+
 
 class Fly(models.Model):
 
-    internal_id = models.CharField(verbose_name='internal ID', max_length=20, blank=True, unique=True)
+    internal_id = models.CharField(
+        verbose_name="internal ID", max_length=20, blank=True, unique=True
+    )
 
-    created     = models.DateTimeField('Created', auto_now_add=True)
-    modified    = models.DateTimeField('Updated', auto_now=True)
-    public      = models.BooleanField('Public', default=False)
-    # lab         = models.ForeignKey('auth.Group', verbose_name='Ownership', on_delete=models.CASCADE)
-    comments    = models.TextField('comments', blank=True, null=True)
-    print       = models.CharField('Comment to print', max_length=30, blank=True, null=True, default='')
-    location    = models.CharField(
-                    'Location', max_length=50, blank=True, null=True,
-                    help_text='Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )'
-                  )
-    # responsible = models.ForeignKey('auth.User',
-    #                 blank=True, null=True, verbose_name='Resposible',
-    #                 on_delete=models.SET_NULL
-    #               )
+    # Fields shared with other congento animal models
+    created = models.DateTimeField("Created", auto_now_add=True)
+    modified = models.DateTimeField("Updated", auto_now=True)
 
-    maintainer = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True)
-    ownership = models.ForeignKey(to="auth.Group", on_delete=models.PROTECT, null=True, blank=True)
+    public = models.BooleanField("Public", default=False)
+    comments = models.TextField("comments", blank=True, null=True)
+    print = models.CharField(
+        "Comment to print", max_length=30, blank=True, null=True, default=""
+    )
+    location = models.CharField(
+        "Location",
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )",
+    )
+
+    maintainer = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True
+    )
+    ownership = models.ForeignKey(
+        to="auth.Group", on_delete=models.PROTECT, null=True, blank=True
+    )
 
     ####################################################################
     #### Genotype ######################################################
     ####################################################################
-    genotype = models.CharField('Genotype', max_length=255, blank=True, null=True)
-    chrx     = models.CharField('chrX', max_length=60, blank=True, null=True)
-    chry     = models.CharField('chrY', max_length=60, blank=True, null=True)
-    bal1     = models.CharField('bal1', max_length=60, blank=True, null=True)
-    chr2     = models.CharField('chr2', max_length=60, blank=True, null=True)
-    bal2     = models.CharField('bal2', max_length=60, blank=True, null=True)
-    chr3     = models.CharField('chr3', max_length=60, blank=True, null=True)
-    bal3     = models.CharField('bal3', max_length=60, blank=True, null=True)
-    chr4     = models.CharField('chr4', max_length=60, blank=True, null=True)
-    chru     = models.CharField('chrU', max_length=60, blank=True, null=True)
+    genotype = models.CharField("Genotype", max_length=255, blank=True, null=True)
+    chrx = models.CharField("chrX", max_length=60, blank=True, null=True)
+    chry = models.CharField("chrY", max_length=60, blank=True, null=True)
+    bal1 = models.CharField("bal1", max_length=60, blank=True, null=True)
+    chr2 = models.CharField("chr2", max_length=60, blank=True, null=True)
+    bal2 = models.CharField("bal2", max_length=60, blank=True, null=True)
+    chr3 = models.CharField("chr3", max_length=60, blank=True, null=True)
+    bal3 = models.CharField("bal3", max_length=60, blank=True, null=True)
+    chr4 = models.CharField("chr4", max_length=60, blank=True, null=True)
+    chru = models.CharField("chrU", max_length=60, blank=True, null=True)
 
     ####################################################################
     #### Legacy source #################################################
     ####################################################################
-    legacysource = models.ForeignKey('LegacySource', null=True, verbose_name='Source', on_delete=models.SET_NULL)
-    legacy1      = models.CharField('Legacy ID 1', max_length=30, blank=True, null=True)
-    legacy2      = models.CharField('Legacy ID 2', max_length=30, blank=True, null=True)
-    legacy3      = models.CharField('Legacy ID 3', max_length=30, blank=True, null=True)
+    legacysource = models.ForeignKey(
+        "LegacySource", null=True, verbose_name="Source", on_delete=models.SET_NULL
+    )
+    legacy1 = models.CharField("Legacy ID 1", max_length=30, blank=True, null=True)
+    legacy2 = models.CharField("Legacy ID 2", max_length=30, blank=True, null=True)
+    legacy3 = models.CharField("Legacy ID 3", max_length=30, blank=True, null=True)
 
-    died = models.BooleanField('Died')
+    died = models.BooleanField("Died")
 
-    category = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL)
-    specie = models.ForeignKey('Specie', null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey("Category", null=True, on_delete=models.SET_NULL)
+    specie = models.ForeignKey("Specie", null=True, on_delete=models.SET_NULL)
 
     ####################################################################
     #### Location ######################################################
     ####################################################################
-    external_location = models.CharField('Local', max_length=30, blank=True, null=True)
+    external_location = models.CharField("Local", max_length=30, blank=True, null=True)
 
-    wolbachia = models.BooleanField('Wolbachia')
-    last_test = models.DateField('Last test', null=True, blank=True)
-    treatment = models.BooleanField('Treatment')
-    strain = models.CharField('Strain', null=True, blank=True, max_length=255)
+    wolbachia = models.BooleanField("Wolbachia")
+    last_test = models.DateField("Last test", null=True, blank=True)
+    treatment = models.BooleanField("Treatment")
+    strain = models.CharField("Strain", null=True, blank=True, max_length=255)
 
-    virus_treatment = models.BooleanField('Virus Treatment')
-    last_treatment = models.DateField('Last treatment', null=True, blank=True)
+    virus_treatment = models.BooleanField("Virus Treatment")
+    last_treatment = models.DateField("Last treatment", null=True, blank=True)
 
-    isogenization = models.BooleanField('Isogenization')
-    background = models.CharField('Background', null=True, blank=True, max_length=255)
-    generations = models.CharField('#Generations', null=True, blank=True, max_length=255)
-
-
-
+    isogenization = models.BooleanField("Isogenization")
+    background = models.CharField("Background", null=True, blank=True, max_length=255)
+    generations = models.CharField(
+        "#Generations", null=True, blank=True, max_length=255
+    )
 
     # objects = FlyQuerySet.as_manager()
 
     class Meta:
-        ordering = ['-id', ]
+        ordering = ["-id"]
         verbose_name = "Fly stock"
         verbose_name_plural = "Flies stock"
 
@@ -99,44 +111,46 @@ class Fly(models.Model):
             self.bal1, self.bal2, self.bal3
         ]
 
-        if len([x is None or x.strip() == '' for x in columns]) == 8:
-            result = '' if (self.chru is None or self.chru.strip() == '') else f"{self.chru}"
+        if len([x is None or x.strip() == "" for x in columns]) == 8:
+            result = (
+                "" if (self.chru is None or self.chru.strip() == "") else f"{self.chru}"
+            )
         else:
             result = self.chrx
 
             if self.chry.strip() != "":
-                result += '/Y' + self.chry
+                result += "/Y" + self.chry
 
             if self.bal1.strip() != "":
-                result += '/' + self.bal1
+                result += "/" + self.bal1
 
             ##############################
-            result += '; '
+            result += "; "
 
             if self.chr2.strip() != "":
                 result += self.chr2
 
             if self.bal2.strip() != "":
-                result += '/' + self.bal2
+                result += "/" + self.bal2
 
             ##############################
-            result += '; '
+            result += "; "
 
             if self.chr3.strip() != "":
                 result += self.chr3
 
             if self.bal3.strip() != "":
-                result += '/' + self.bal3
+                result += "/" + self.bal3
             ##############################
-            result += '; '
+            result += "; "
 
-            if self.chr4.strip() != "": result += self.chr4
+            if self.chr4.strip() != "":
+                result += self.chr4
 
             if self.chru.strip() != "":
-                result += ' (' + self.chru + ')'
+                result += " (" + self.chru + ")"
 
         return result
-
 
     def legacy(self):
         result = []
@@ -150,7 +164,6 @@ class Fly(models.Model):
             result.append(self.legacy3)
 
         return " | ".join(result)
-
 
     """
     def clean_fields(self, exclude=None):
