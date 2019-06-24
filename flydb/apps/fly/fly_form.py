@@ -36,7 +36,7 @@ class FlyForm(ModelFormWidget):
             'chr4',
             'chru'
         ),
-        'print',
+        'printable_comment',
         'comments',
         # ('responsible', 'lab'),
         # 'PermissionsListApp'

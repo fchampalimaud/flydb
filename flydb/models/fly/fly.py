@@ -52,7 +52,7 @@ class Fly(AbstractFly):
         verbose_name="internal ID", max_length=20, blank=True, unique=True
     )
 
-    print = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
+    printable_comment = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
 
     location = models.CharField(
         max_length=50,
