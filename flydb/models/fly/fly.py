@@ -17,15 +17,11 @@ class Fly(models.Model):
     modified = models.DateTimeField("Updated", auto_now=True)
 
     public = models.BooleanField("Public", default=False)
-    comments = models.TextField("comments", blank=True, null=True)
-    print = models.CharField(
-        "Comment to print", max_length=30, blank=True, null=True, default=""
-    )
+    comments = models.TextField(blank=True)
+    print = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
     location = models.CharField(
-        "Location",
         max_length=50,
         blank=True,
-        null=True,
         help_text="Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )",
     )
 
@@ -39,16 +35,16 @@ class Fly(models.Model):
     ####################################################################
     #### Genotype ######################################################
     ####################################################################
-    genotype = models.CharField("Genotype", max_length=255, blank=True, null=True)
-    chrx = models.CharField("chrX", max_length=60, blank=True, null=True)
-    chry = models.CharField("chrY", max_length=60, blank=True, null=True)
-    bal1 = models.CharField("bal1", max_length=60, blank=True, null=True)
-    chr2 = models.CharField("chr2", max_length=60, blank=True, null=True)
-    bal2 = models.CharField("bal2", max_length=60, blank=True, null=True)
-    chr3 = models.CharField("chr3", max_length=60, blank=True, null=True)
-    bal3 = models.CharField("bal3", max_length=60, blank=True, null=True)
-    chr4 = models.CharField("chr4", max_length=60, blank=True, null=True)
-    chru = models.CharField("chrU", max_length=60, blank=True, null=True)
+    genotype = models.CharField(max_length=255, blank=True)
+    chrx = models.CharField(max_length=60, verbose_name="chrX", blank=True)
+    chry = models.CharField(max_length=60, verbose_name="chrY", blank=True)
+    bal1 = models.CharField(max_length=60, verbose_name="bal1", blank=True)
+    chr2 = models.CharField(max_length=60, verbose_name="chr2", blank=True)
+    bal2 = models.CharField(max_length=60, verbose_name="bal2", blank=True)
+    chr3 = models.CharField(max_length=60, verbose_name="chr3", blank=True)
+    bal3 = models.CharField(max_length=60, verbose_name="bal3", blank=True)
+    chr4 = models.CharField(max_length=60, verbose_name="chr4", blank=True)
+    chru = models.CharField(max_length=60, verbose_name="chrU", blank=True)
 
     ####################################################################
     #### Legacy source #################################################
@@ -56,9 +52,9 @@ class Fly(models.Model):
     legacysource = models.ForeignKey(
         "LegacySource", null=True, verbose_name="Source", on_delete=models.SET_NULL
     )
-    legacy1 = models.CharField("Legacy ID 1", max_length=30, blank=True, null=True)
-    legacy2 = models.CharField("Legacy ID 2", max_length=30, blank=True, null=True)
-    legacy3 = models.CharField("Legacy ID 3", max_length=30, blank=True, null=True)
+    legacy1 = models.CharField(max_length=30, verbose_name="Legacy ID 1", blank=True)
+    legacy2 = models.CharField(max_length=30, verbose_name="Legacy ID 2", blank=True)
+    legacy3 = models.CharField(max_length=30, verbose_name="Legacy ID 3", blank=True)
 
     died = models.BooleanField("Died")
 
@@ -68,20 +64,22 @@ class Fly(models.Model):
     ####################################################################
     #### Location ######################################################
     ####################################################################
-    external_location = models.CharField("Local", max_length=30, blank=True, null=True)
+    external_location = models.CharField(
+        max_length=30, verbose_name="Local", blank=True
+    )
 
     wolbachia = models.BooleanField("Wolbachia")
     last_test = models.DateField("Last test", null=True, blank=True)
     treatment = models.BooleanField("Treatment")
-    strain = models.CharField("Strain", null=True, blank=True, max_length=255)
+    strain = models.CharField(max_length=255, blank=True)
 
     virus_treatment = models.BooleanField("Virus Treatment")
     last_treatment = models.DateField("Last treatment", null=True, blank=True)
 
     isogenization = models.BooleanField("Isogenization")
-    background = models.CharField("Background", null=True, blank=True, max_length=255)
+    background = models.CharField(max_length=255, blank=True)
     generations = models.CharField(
-        "#Generations", null=True, blank=True, max_length=255
+        max_length=255, verbose_name="# generations", blank=True
     )
 
     # objects = FlyQuerySet.as_manager()
