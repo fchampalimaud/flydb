@@ -94,11 +94,6 @@ class Fly(AbstractFly):
 
     # objects = FlyQuerySet.as_manager()
 
-    class Meta:
-        ordering = ["-id"]
-        verbose_name = "Fly stock"
-        verbose_name_plural = "Flies stock"
-
     def __str__(self):
         if self.internal_id:
             return self.internal_id
