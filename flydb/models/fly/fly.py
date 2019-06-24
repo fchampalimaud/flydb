@@ -119,7 +119,10 @@ class Fly(AbstractFly):
             self.bal1, self.bal2, self.bal3
         ]
 
-        if len([x is None or x.strip() == "" for x in columns]) == 8:
+        # TODO needs more testing, the first 'if' looks bananas
+
+        # if len([x is None or x.strip() == "" for x in columns]) == 8:
+        if not any(columns):
             result = (
                 "" if (self.chru is None or self.chru.strip() == "") else f"{self.chru}"
             )
