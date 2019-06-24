@@ -16,14 +16,14 @@ class FlyApp(ModelAdminWidget):
 
     LIST_DISPLAY = [
         "internal_id",
-        "specie",
+        "species",
         "genotype",
         "legacysource",
         "legacy",
         "location",
     ]
 
-    LIST_FILTER = ["legacysource__legacysource_name", "specie", "died"]
+    LIST_FILTER = ["legacysource__legacysource_name", "species", "died"]
 
     SEARCH_FIELDS = [
         "internal_id__icontains",

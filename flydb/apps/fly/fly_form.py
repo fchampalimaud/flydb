@@ -28,7 +28,7 @@ class FlyForm(ModelFormWidget):
         ),
         'h3:Genotype',
         segment(
-            'specie',
+            'species',
             # no_columns('_new_genotype', '_set_genotype'),
             ('chrx', 'chry', 'bal1'),
             ('chr2', 'bal2'),
