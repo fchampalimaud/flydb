@@ -58,12 +58,15 @@ class Fly(AbstractFly):
         max_length=50,
         blank=True,
         help_text="Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )",
+        # TODO add validator for tray using the notation above
     )
 
+    # TODO check if this is required
     external_location = models.CharField(
         max_length=30, verbose_name="Local", blank=True
     )
 
+    # TODO modify the legacy source system to an origin table
     legacysource = models.ForeignKey(
         "LegacySource", null=True, verbose_name="Source", on_delete=models.SET_NULL
     )
@@ -71,7 +74,7 @@ class Fly(AbstractFly):
     legacy2 = models.CharField(max_length=30, verbose_name="Legacy ID 2", blank=True)
     legacy3 = models.CharField(max_length=30, verbose_name="Legacy ID 3", blank=True)
 
-    died = models.BooleanField("Died")
+    died = models.BooleanField("Died")  # TODO change to is_dead
 
     wolbachia = models.BooleanField("Wolbachia")
     wolbachia_test_date = models.DateField("Last test", null=True, blank=True)
