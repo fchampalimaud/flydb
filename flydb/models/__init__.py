@@ -6,4 +6,5 @@ from .supplier import Supplier
 from .category import Category
 from .hospitalization import Hospitalization
 from .fly.fly import Fly
+from .origin import Origin
 from .fly.fly_permission import FlyPermission

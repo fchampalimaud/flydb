@@ -6,6 +6,7 @@ from pyforms_web.allcontrols import ControlButton, ControlText
 
 # from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
+from ..origins import FlyOriginApp
 
 
 class FlyForm(ModelFormWidget):
@@ -14,6 +15,7 @@ class FlyForm(ModelFormWidget):
 
     INLINES = [
         HospitalizationAdminApp,
+        FlyOriginApp,
     ]
 
     LAYOUT_POSITION = conf.ORQUESTRA_NEW_TAB
@@ -104,7 +106,9 @@ class FlyForm(ModelFormWidget):
             ),
             'h3:Previous IDs',
             segment(
-                ('legacysource', 'legacy1', 'legacy2', 'legacy3')
+                ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
+                " ",
+                "FlyOriginApp",
             ),
             'h3:Thermal Printer',
             segment(
