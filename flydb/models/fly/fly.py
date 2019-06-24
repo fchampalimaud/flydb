@@ -74,17 +74,17 @@ class Fly(AbstractFly):
     died = models.BooleanField("Died")
 
     wolbachia = models.BooleanField("Wolbachia")
-    last_test = models.DateField("Last test", null=True, blank=True)
-    treatment = models.BooleanField("Treatment")
-    strain = models.CharField(max_length=255, blank=True)
+    wolbachia_test_date = models.DateField("Last test", null=True, blank=True)
+    wolbachia_treatment = models.BooleanField("Treatment")
+    wolbachia_strain = models.CharField(max_length=100, blank=True)
 
     virus_treatment = models.BooleanField("Virus Treatment")
-    last_treatment = models.DateField("Last treatment", null=True, blank=True)
+    virus_treatment_date = models.DateField("Last treatment", null=True, blank=True)
 
     isogenization = models.BooleanField("Isogenization")
-    background = models.CharField(max_length=255, blank=True)
-    generations = models.CharField(
-        max_length=255, verbose_name="# generations", blank=True
+    background = models.CharField(max_length=100, blank=True)
+    generations = models.PositiveSmallIntegerField(
+        verbose_name="# generations", null=True, blank=True
     )
 
     # objects = FlyQuerySet.as_manager()

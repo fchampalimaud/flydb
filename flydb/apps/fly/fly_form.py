@@ -15,8 +15,8 @@ class FlyForm(ModelFormWidget):
         'public',
         ('internal_id', 'category', 'location'),
         segment(
-            ('wolbachia','last_test', 'treatment', 'strain'),
-            ('virus_treatment', 'last_treatment', ' ', ' '),
+            ('wolbachia', 'wolbachia_test_date', 'wolbachia_treatment', 'wolbachia_strain'),
+            ('virus_treatment', 'virus_treatment_date', ' ', ' '),
             ('isogenization', 'background', 'generations', ' '),
             'died',
             ' ',
@@ -97,19 +97,19 @@ class FlyForm(ModelFormWidget):
 
     def __wolbachia_changed_evt(self):
         if self.wolbachia.value:
-            self.last_test.show()
-            self.treatment.show()
-            self.strain.show()
+            self.wolbachia_test_date.show()
+            self.wolbachia_treatment.show()
+            self.wolbachia_strain.show()
         else:
-            self.last_test.hide()
-            self.treatment.hide()
-            self.strain.hide()
+            self.wolbachia_test_date.hide()
+            self.wolbachia_treatment.hide()
+            self.wolbachia_strain.hide()
 
     def __virus_treatment_changed_evt(self):
         if self.virus_treatment.value:
-            self.last_treatment.show()
+            self.virus_treatment_date.show()
         else:
-            self.last_treatment.hide()
+            self.virus_treatment_date.hide()
 
     def __isogenization_changed_evt(self):
         if self.isogenization.value:
