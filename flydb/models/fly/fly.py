@@ -30,6 +30,8 @@ class AbstractFly(models.Model):
     chr4 = models.CharField(max_length=60, verbose_name="chr4", blank=True)
     chru = models.CharField(max_length=60, verbose_name="chrU", blank=True)
 
+    line_description = models.TextField(blank=True)
+
     class Meta:
         abstract = True
         verbose_name = "fly"

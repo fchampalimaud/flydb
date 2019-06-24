@@ -37,9 +37,10 @@ class FlyForm(ModelFormWidget):
             'chru'
         ),
         'printable_comment',
-        'comments',
-        # ('responsible', 'lab'),
-        # 'PermissionsListApp'
+        "info:You can use the <b>Line description</b> field below to "
+        "provide more details. Use the <b>Comments</b> field below for "
+        "private notes.",
+        ("line_description", "comments"),
     ]
 
     READ_ONLY = ['entrydate', 'updated', 'genotype']
