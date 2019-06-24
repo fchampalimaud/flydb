@@ -17,7 +17,7 @@ class AbstractFly(models.Model):
 
     # Specific fields for this animal model
     category = models.ForeignKey("Category", on_delete=models.PROTECT, null=True, blank=True)
-    specie = models.ForeignKey("Specie", null=True, on_delete=models.SET_NULL)
+    specie = models.ForeignKey("Species", null=True, on_delete=models.SET_NULL)
 
     genotype = models.CharField(max_length=255, blank=True)
     chrx = models.CharField(max_length=60, verbose_name="chrX", blank=True)

@@ -2,7 +2,7 @@ from confapp import conf
 from pyforms_web.widgets.django import ModelAdminWidget
 from pyforms_web.widgets.django import ModelFormWidget
 
-from flydb.models import Specie
+from flydb.models import Species
 
 
 class FlySpeciesForm(ModelFormWidget):
@@ -14,8 +14,8 @@ class FlySpeciesForm(ModelFormWidget):
 
 class FlySpeciesApp(ModelAdminWidget):
 
-    UID = 'fly-Species'
-    MODEL = Specie
+    UID = 'fly-species'
+    MODEL = Species
 
     TITLE = 'Species'
 
