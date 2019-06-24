@@ -6,48 +6,14 @@ from pyforms_web.allcontrols import ControlButton, ControlText
 
 # from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
-# from .permissions_list import PermissionsListApp
 
 
 class FlyForm(ModelFormWidget):
 
-    FIELDSETS = [
-        'public',
-        ('internal_id', 'category', 'location'),
-        segment(
-            ('wolbachia', 'wolbachia_test_date', 'wolbachia_treatment', 'wolbachia_strain'),
-            ('virus_treatment', 'virus_treatment_date', ' ', ' '),
-            ('isogenization', 'background', 'generations', ' '),
-            'died',
-            ' ',
-            'HospitalizationAdminApp',
-        ),
-        'h3:Previous IDs',
-        segment(
-            ('legacysource', 'legacy1', 'legacy2', 'legacy3')
-        ),
-        'h3:Genotype',
-        segment(
-            'species',
-            # no_columns('_new_genotype', '_set_genotype'),
-            ('chrx', 'chry', 'bal1'),
-            ('chr2', 'bal2'),
-            ('chr3', 'bal3'),
-            'chr4',
-            'chru'
-        ),
-        'printable_comment',
-        "info:You can use the <b>Line description</b> field below to "
-        "provide more details. Use the <b>Comments</b> field below for "
-        "private notes.",
-        ("line_description", "comments"),
-    ]
-
-    READ_ONLY = ['entrydate', 'updated', 'genotype']
+    READ_ONLY = ['created', 'modified']
 
     INLINES = [
         HospitalizationAdminApp,
-        # PermissionsListApp,
     ]
 
     LAYOUT_POSITION = conf.ORQUESTRA_NEW_TAB
@@ -61,12 +27,39 @@ class FlyForm(ModelFormWidget):
         )
         self._new_genotype = ControlText('New genotype', visible=False)
 
+        self._print = ControlButton(
+            'Print',
+            default=None,
+            css='basic blue',
+        )
+
         super().__init__(*args, **kwargs)
 
+        self.public.checkbox_type = ""
+        self.public.label_visible = False
+        self.public.label = "Share with Congento network"
+
+        self.died.checkbox_type = ""
         self.died.label_visible = False
-        self.wolbachia.label_visible = False
-        self.virus_treatment.label_visible = False
-        self.isogenization.label_visible = False
+        self.died.label = "Stock is dead"
+
+        # self.wolbachia.label_visible = False
+        # self.virus_treatment.label_visible = False
+        # self.isogenization.label_visible = False
+
+        self.wolbachia_treatment.checkbox_type = ""
+
+        # FIXME change these in the model verbose name
+        self.chrx.label = "Chromosome X"
+        self.chry.label = "Chromosome Y"
+        self.bal1.label = "Balancer 1"
+        self.chr2.label = "Chromosome 2"
+        self.bal2.label = "Balancer 2"
+        self.chr3.label = "Chromosome 3"
+        self.bal3.label = "Balancer 3"
+        self.chr4.label = "Chromosome 4"
+        self.chru.label = "Unknown"
+
 
         self.wolbachia.changed_event = self.__wolbachia_changed_evt
         self.isogenization.changed_event = self.__isogenization_changed_evt
@@ -75,6 +68,65 @@ class FlyForm(ModelFormWidget):
         self.__isogenization_changed_evt()
         self.__wolbachia_changed_evt()
         self.__virus_treatment_changed_evt()
+
+    @property
+    def title(self):
+        try:
+            return str(self.model_object)  # FIXME use internal_id or something
+        except AttributeError:
+            pass  # apparently it defaults to App TITLE
+
+    def get_fieldsets(self, default):
+        user = PyFormsMiddleware.user()
+
+        default = [
+            segment(
+                ("species", "category", "internal_id", 'location'),
+                no_columns("died"),
+                no_columns("public"),
+            ),
+            'h3:Genotype',
+            segment(
+                # no_columns('_new_genotype', '_set_genotype'),
+                ('chrx', 'chry', 'bal1'),
+                ('chr2', 'bal2'),
+                ('chr3', 'bal3'),
+                'chr4',
+                'chru',
+            ),
+            "h3:Extra Info",
+            segment(
+                ('wolbachia', 'wolbachia_test_date', 'wolbachia_treatment', 'wolbachia_strain'),
+                ('virus_treatment', 'virus_treatment_date', ' ', ' '),
+                ('isogenization', 'background', 'generations', ' '),
+                ' ',
+                'HospitalizationAdminApp',
+            ),
+            'h3:Previous IDs',
+            segment(
+                ('legacysource', 'legacy1', 'legacy2', 'legacy3')
+            ),
+            'h3:Thermal Printer',
+            segment(
+                ('printable_comment', "_print"),
+            ),
+            segment(
+                "info:You can use the <b>Line description</b> field below to "
+                "provide more details. Use the <b>Comments</b> field below for "
+                "private notes.",
+                ("line_description", "comments"),
+            ),
+        ]
+
+        if user.is_superuser:
+            default += [
+                segment(
+                    ("maintainer", "ownership"),
+                    ("created", "modified"),
+                )
+            ]
+
+        return default
 
     def set_genotype(self, genotype_txt):
         """
@@ -119,16 +171,3 @@ class FlyForm(ModelFormWidget):
         else:
             self.background.hide()
             self.generations.hide()
-
-    @property
-    def title(self):
-        try:
-            return str(self.model_object)  # FIXME use internal_id or something
-        except AttributeError:
-            pass  # apparently it defaults to App TITLE
-
-    def get_fieldsets(self, default):
-        # user = PyFormsMiddleware.user()
-        # if user.is_superuser:
-        #     default += [("responsible", "lab"),]
-        return default

@@ -23,7 +23,17 @@ class FlyApp(ModelAdminWidget):
         "location",
     ]
 
-    LIST_FILTER = ["legacysource__legacysource_name", "species", "died"]
+    LIST_FILTER = [
+        "species",
+        "category",
+        "legacysource__legacysource_name",
+        # "wolbachia",
+        # "virus_treatment",
+        # "isogenization",
+        # "died",
+        "public",
+        # "ownership",
+    ]
 
     SEARCH_FIELDS = [
         "internal_id__icontains",
@@ -35,9 +45,7 @@ class FlyApp(ModelAdminWidget):
         "comments__icontains",
     ]
 
-    READ_ONLY = ["entrydate", "updated", "genotype"]
-
-    USE_DETAILS_TO_EDIT = False
+    USE_DETAILS_TO_EDIT = False  # required to have form in NEW_TAB
 
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
     ORQUESTRA_MENU = "left"
@@ -50,8 +58,13 @@ class FlyApp(ModelAdminWidget):
             return True
 
         if user.memberships.filter(
-                group__accesses__animaldb=cls.MODEL._meta.app_label
+            group__accesses__animaldb=cls.MODEL._meta.app_label
         ).exists():
             return True
 
         return False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self._list.custom_filter_labels = {"public": "Shared with Congento"}
