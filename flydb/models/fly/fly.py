@@ -50,6 +50,8 @@ class Fly(AbstractFly):
         to="auth.Group", on_delete=models.PROTECT, null=True, blank=True
     )  # FIXME use users.Group
 
+    # TODO what about stocks belonging to a group but managed by the platform?
+
     internal_id = models.CharField(
         verbose_name="internal ID", max_length=20, blank=True, unique=True
     )
