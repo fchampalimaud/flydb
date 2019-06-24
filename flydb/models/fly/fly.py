@@ -6,35 +6,19 @@ from .fly_permission import FlyPermission
 # from .fly_queryset import FlyQuerySet
 
 
-class Fly(models.Model):
-
-    internal_id = models.CharField(
-        verbose_name="internal ID", max_length=20, blank=True, unique=True
-    )
+class AbstractFly(models.Model):
+    """
+    Must be compatible with Congento model scheme!
+    """
 
     # Fields shared with other congento animal models
     created = models.DateTimeField("Created", auto_now_add=True)
     modified = models.DateTimeField("Updated", auto_now=True)
 
-    public = models.BooleanField("Public", default=False)
-    comments = models.TextField(blank=True)
-    print = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
-    location = models.CharField(
-        max_length=50,
-        blank=True,
-        help_text="Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )",
-    )
+    # Specific fields for this animal model
+    category = models.ForeignKey("Category", null=True, on_delete=models.SET_NULL)
+    specie = models.ForeignKey("Specie", null=True, on_delete=models.SET_NULL)
 
-    maintainer = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True
-    )
-    ownership = models.ForeignKey(
-        to="auth.Group", on_delete=models.PROTECT, null=True, blank=True
-    )
-
-    ####################################################################
-    #### Genotype ######################################################
-    ####################################################################
     genotype = models.CharField(max_length=255, blank=True)
     chrx = models.CharField(max_length=60, verbose_name="chrX", blank=True)
     chry = models.CharField(max_length=60, verbose_name="chrY", blank=True)
@@ -46,9 +30,40 @@ class Fly(models.Model):
     chr4 = models.CharField(max_length=60, verbose_name="chr4", blank=True)
     chru = models.CharField(max_length=60, verbose_name="chrU", blank=True)
 
-    ####################################################################
-    #### Legacy source #################################################
-    ####################################################################
+    class Meta:
+        abstract = True
+        verbose_name = "fly"
+        verbose_name_plural = "flies"
+
+
+class Fly(AbstractFly):
+    public = models.BooleanField("Public", default=False)
+
+    comments = models.TextField(blank=True)
+
+    maintainer = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True
+    )
+    ownership = models.ForeignKey(
+        to="auth.Group", on_delete=models.PROTECT, null=True, blank=True
+    )  # FIXME use users.Group
+
+    internal_id = models.CharField(
+        verbose_name="internal ID", max_length=20, blank=True, unique=True
+    )
+
+    print = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
+
+    location = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Format: Tray_Row_Col ( Tray=1-N; Row=A-J; Col=1-10 )",
+    )
+
+    external_location = models.CharField(
+        max_length=30, verbose_name="Local", blank=True
+    )
+
     legacysource = models.ForeignKey(
         "LegacySource", null=True, verbose_name="Source", on_delete=models.SET_NULL
     )
@@ -57,16 +72,6 @@ class Fly(models.Model):
     legacy3 = models.CharField(max_length=30, verbose_name="Legacy ID 3", blank=True)
 
     died = models.BooleanField("Died")
-
-    category = models.ForeignKey("Category", null=True, on_delete=models.SET_NULL)
-    specie = models.ForeignKey("Specie", null=True, on_delete=models.SET_NULL)
-
-    ####################################################################
-    #### Location ######################################################
-    ####################################################################
-    external_location = models.CharField(
-        max_length=30, verbose_name="Local", blank=True
-    )
 
     wolbachia = models.BooleanField("Wolbachia")
     last_test = models.DateField("Last test", null=True, blank=True)
