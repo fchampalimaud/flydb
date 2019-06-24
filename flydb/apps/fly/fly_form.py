@@ -13,7 +13,7 @@ class FlyForm(ModelFormWidget):
 
     FIELDSETS = [
         'public',
-        ('flydbid', 'category', 'location'),
+        ('internal_id', 'category', 'location'),
         segment(
             ('wolbachia','last_test', 'treatment', 'strain'),
             ('virus_treatment', 'last_treatment', ' ', ' '),

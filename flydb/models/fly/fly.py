@@ -5,10 +5,8 @@ from django.db import models
 
 class Fly(models.Model):
 
-    # FIXME difference between internal id and flydb id ???
+    internal_id = models.CharField(verbose_name='internal ID', max_length=20, blank=True, unique=True)
 
-    id          = models.AutoField('Id', primary_key=True)
-    internal_id = models.CharField('Internal ID', max_length=40, blank=True, null=True, unique=True)
     created     = models.DateTimeField('Created', auto_now_add=True)
     modified    = models.DateTimeField('Updated', auto_now=True)
     public      = models.BooleanField('Public', default=False)
@@ -49,7 +47,6 @@ class Fly(models.Model):
     legacy2      = models.CharField('Legacy ID 2', max_length=30, blank=True, null=True)
     legacy3      = models.CharField('Legacy ID 3', max_length=30, blank=True, null=True)
 
-    flydbid  = models.CharField('Fly DB ID', max_length=50, blank=True, null=True)
     died = models.BooleanField('Died')
 
     category = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL)
@@ -83,9 +80,13 @@ class Fly(models.Model):
         verbose_name_plural = "Flies stock"
 
     def __str__(self):
-        return self.internal_id if self.internal_id else f'({self.pk}) {self.genotype}'
+        if self.internal_id:
+            return self.internal_id
 
+        if self.genotype:
+            return self.genotype
 
+        return str(self.id)
 
     def get_genotype(self):
         """
