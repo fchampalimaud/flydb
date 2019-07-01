@@ -19,15 +19,15 @@ class FlyApp(ModelAdminWidget):
         "internal_id",
         "species",
         "genotype",
-        "legacysource",
-        "legacy",
-        "location",
+        "origin",
+        "origin_id",
+        "ownership",
     ]
 
     LIST_FILTER = [
         "species",
         "category",
-        "legacysource__legacysource_name",
+        "origin",
         # "wolbachia",
         # "virus_treatment",
         # "isogenization",
