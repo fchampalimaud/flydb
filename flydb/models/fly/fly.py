@@ -150,60 +150,46 @@ class Fly(AbstractFly):
         else:
             raise ValueError("Invalid origin")
 
+        # Clean genotype
+
+        if not self.chru and not any([self.chrx, self.chry, self.chr2, self.chr3, self.chr4]):
+            raise ValidationError("message")
+
     def get_genotype(self):
         """
-        Return the genotype full label based on the genotypes fields
-        :return:
+        Return the full genotype label based on the genotype fields.
+
+        If the the genotype is specified using the `unknown` field, only
+        this is shown.
+
+        User should split the genotype accordingly among the different
+        chromosomes.
         """
-        columns = [
-            self.chrx, self.chry,
-            self.chr2, self.chr3, self.chr4,
-            self.bal1, self.bal2, self.bal3
-        ]
+        genotype = ""
 
-        # TODO needs more testing, the first 'if' looks bananas
-
-        # if len([x is None or x.strip() == "" for x in columns]) == 8:
-        if not any(columns):
-            result = (
-                "" if (self.chru is None or self.chru.strip() == "") else f"{self.chru}"
-            )
+        if self.chru:
+            genotype += self.chru.strip()
         else:
-            result = self.chrx
+            genotype += self.chrx.strip()
+            if self.chry.strip():
+                genotype += "/Y" + self.chry.strip()
+            if self.bal1.strip():
+                genotype += "/" + self.bal1.strip()
+            genotype += "; "
 
-            if self.chry.strip() != "":
-                result += "/Y" + self.chry
+            genotype += self.chr2.strip()
+            if self.bal2.strip():
+                genotype += "/" + self.bal2.strip()
+            genotype += "; "
 
-            if self.bal1.strip() != "":
-                result += "/" + self.bal1
+            genotype += self.chr3.strip()
+            if self.bal3.strip():
+                genotype += "/" + self.bal3.strip()
+            genotype += "; "
 
-            ##############################
-            result += "; "
+            genotype += self.chr4.strip()
 
-            if self.chr2.strip() != "":
-                result += self.chr2
-
-            if self.bal2.strip() != "":
-                result += "/" + self.bal2
-
-            ##############################
-            result += "; "
-
-            if self.chr3.strip() != "":
-                result += self.chr3
-
-            if self.bal3.strip() != "":
-                result += "/" + self.bal3
-            ##############################
-            result += "; "
-
-            if self.chr4.strip() != "":
-                result += self.chr4
-
-            if self.chru.strip() != "":
-                result += " (" + self.chru + ")"
-
-        return result
+        return genotype.strip()
 
     def legacy(self):
         result = []
