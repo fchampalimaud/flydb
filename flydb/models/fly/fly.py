@@ -209,31 +209,6 @@ class Fly(AbstractFly):
 
         return " | ".join(result)
 
-    """
-    def clean_fields(self, exclude=None):
-
-        if self.location and self.location.location_id == 1:
-            if not self.loc1_location:
-                raise Exception('You have to complete the loc1_location field')
-            else:
-                if (not re.match('([0-9]*)\_([A-J]*)\_([0-9]*)', self.loc1_location)):
-                    raise Exception('The field loc1_location do not have the correct format')
-                self.loc2_person = None
-                self.loc3_data = None
-
-        if (self.location and self.location.location_id == 2):
-            if (not self.loc2_person):
-                raise Exception('You have to complete the loc2_person field')
-            # self.loc1_location = None
-            self.loc3_data = None
-
-        if (self.location and self.location.location_id == 3):
-            if (not self.loc3_data):
-                raise Exception('You have to complete the loc3_data field')
-            self.loc2_person = None
-            self.loc1_location = None
-    """
-
     def save(self, *args, **kwargs):
         self.genotype = self.get_genotype()
         super().save(*args, **kwargs)
