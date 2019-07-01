@@ -130,32 +130,37 @@ class Fly(AbstractFly):
         return str(self.id)
 
     def clean(self):
-        msg = "This field is required"
+        errors_dict = {"__all__": []}
+        msg = "This field is required."
+
+        # Dead stock may not be shared
+        if self.public and self.died:
+            errors_dict["__all__"].append("A dead stock can not be made public.")
 
         # Clean origin
-
         if self.origin == self.ORIGINS.center:
             if not self.origin_center:
-                raise ValidationError({"origin_center": msg})
+                errors_dict["origin_center"] = msg
             self.origin_internal = None
             self.origin_external = ""
         elif self.origin == self.ORIGINS.internal:
             if not self.origin_internal:
-                raise ValidationError({"origin_internal": msg})
+                errors_dict["origin_internal"] = msg
             self.origin_center = None
             self.origin_external = ""
         elif self.origin == self.ORIGINS.external:
             if not self.origin_external:
-                raise ValidationError({"origin_external": msg})
+                errors_dict["origin_external"] = msg
             self.origin_center = None
             self.origin_internal = None
         else:
             raise ValueError("Invalid origin")
 
         # Clean genotype
-
         if not self.chru and not any([self.chrx, self.chry, self.chr2, self.chr3, self.chr4]):
-            raise ValidationError("message")
+            errors_dict["__all__"].append("The genotype must be specified.")
+
+        raise ValidationError(errors_dict)
 
     def get_genotype(self):
         """
