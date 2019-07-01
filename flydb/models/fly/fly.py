@@ -132,6 +132,8 @@ class Fly(AbstractFly):
     def clean(self):
         msg = "This field is required"
 
+        # Clean origin
+
         if self.origin == self.ORIGINS.center:
             if not self.origin_center:
                 raise ValidationError({"origin_center": msg})
@@ -192,6 +194,9 @@ class Fly(AbstractFly):
         return genotype.strip()
 
     def legacy(self):
+        """
+        FIXME deprecated, use the origin fields instead
+        """
         result = []
         if self.legacy1:
             result.append(self.legacy1)
