@@ -20,13 +20,6 @@ class FlyForm(ModelFormWidget):
 
     def __init__(self, *args, **kwargs):
 
-        self._set_genotype = ControlButton(
-            'Update genotype',
-            default=self.__update_genotype_evt,
-            css='basic blue'
-        )
-        self._new_genotype = ControlText('New genotype', visible=False)
-
         self._print = ControlButton(
             'Print',
             default=None,
@@ -60,7 +53,7 @@ class FlyForm(ModelFormWidget):
         self.chr3.label = "Chromosome 3"
         self.bal3.label = "Balancer 3"
         self.chr4.label = "Chromosome 4"
-        self.chru.label = "Unknown"
+        self.chru.label = "Unknown genotype"
 
         self.origin.changed_event = self.__on_origin
         self.wolbachia.changed_event = self.__wolbachia_changed_evt
@@ -90,12 +83,11 @@ class FlyForm(ModelFormWidget):
             ),
             'h3:Genotype',
             segment(
-                # no_columns('_new_genotype', '_set_genotype'),
-                ('chrx', 'chry', 'bal1'),
-                ('chr2', 'bal2'),
-                ('chr3', 'bal3'),
-                'chr4',
-                'chru',
+                ("chrx", "chry", "chr2", "chr3", "chr4"),
+                ("bal1", " ", "bal2", "bal3", " "),
+                "info:Try to fill in genotype using the fields above. "
+                "If you are not sure, write the full genotype below.",
+                "chru",
             ),
             "h3:Extra Info",
             segment(
@@ -132,26 +124,6 @@ class FlyForm(ModelFormWidget):
             ]
 
         return default
-
-    def set_genotype(self, genotype_txt):
-        """
-        Update the genotype fields from the full genotype label
-        :param genotype_txt:
-        :return:
-        """
-        raise Exception('Wrong genotype')
-
-    def __update_genotype_evt(self):
-        if self._new_genotype.visible:
-            if self._new_genotype.value:
-                try:
-                    self.set_genotype(self._new_genotype.value)
-                    self._new_genotype.hide()
-                except Exception as e:
-                    self.alert(str(e), 'Error parsing genotype text')
-                    self._new_genotype.value = ''
-        else:
-            self._new_genotype.show()
 
     def __on_origin(self):
         if self.origin.value == self.model.ORIGINS.center:
