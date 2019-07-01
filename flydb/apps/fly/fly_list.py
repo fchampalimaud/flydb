@@ -1,4 +1,5 @@
 from confapp import conf
+from pyforms.controls import ControlCheckBox
 from pyforms_web.widgets.django import ModelAdminWidget
 from flydb.models import Fly
 
@@ -65,6 +66,24 @@ class FlyApp(ModelAdminWidget):
         return False
 
     def __init__(self, *args, **kwargs):
+
+        self._unknown_filter = ControlCheckBox(
+            "List only stocks with unknown genotypes",
+            default=False,
+            label_visible=False,
+            changed_event=self.populate_list,
+        )
+
         super().__init__(*args, **kwargs)
 
         self._list.custom_filter_labels = {"public": "Shared with Congento"}
+
+    def get_toolbar_buttons(self, has_add_permission=False):
+        toolbar = super().get_toolbar_buttons(has_add_permission)
+        return tuple([toolbar] + ["_unknown_filter"])
+
+    def get_queryset(self, request, qs):
+            if self._unknown_filter.value:
+                qs = qs.exclude(chru__exact="")
+
+            return qs
