@@ -83,10 +83,12 @@ class FlyForm(ModelFormWidget):
             ),
             'h3:Genotype',
             segment(
+                "info:Try to fill in all applicable fields. "
+                "If you are not certain of the genetic location, write the full "
+                "genotype in the <b>Unknown</b> field below.",
                 ("chrx", "chry", "chr2", "chr3", "chr4"),
                 ("bal1", " ", "bal2", "bal3", " "),
-                "info:Try to fill in genotype using the fields above. "
-                "If you are not sure, write the full genotype below.",
+                "-",
                 "chru",
             ),
             "h3:Extra Info",
