@@ -6,7 +6,6 @@ from pyforms_web.allcontrols import ControlButton, ControlText
 
 # from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
-from ..origins import FlyOriginApp
 
 
 class FlyForm(ModelFormWidget):
@@ -15,7 +14,6 @@ class FlyForm(ModelFormWidget):
 
     INLINES = [
         HospitalizationAdminApp,
-        FlyOriginApp,
     ]
 
     LAYOUT_POSITION = conf.ORQUESTRA_NEW_TAB
@@ -45,6 +43,8 @@ class FlyForm(ModelFormWidget):
         self.died.label_visible = False
         self.died.label = "Stock is dead"
 
+        self.origin_obs.style = "height: 4em"
+
         # self.wolbachia.label_visible = False
         # self.virus_treatment.label_visible = False
         # self.isogenization.label_visible = False
@@ -62,11 +62,12 @@ class FlyForm(ModelFormWidget):
         self.chr4.label = "Chromosome 4"
         self.chru.label = "Unknown"
 
-
+        self.origin.changed_event = self.__on_origin
         self.wolbachia.changed_event = self.__wolbachia_changed_evt
         self.isogenization.changed_event = self.__isogenization_changed_evt
         self.virus_treatment.changed_event = self.__virus_treatment_changed_evt
 
+        self.__on_origin()
         self.__isogenization_changed_evt()
         self.__wolbachia_changed_evt()
         self.__virus_treatment_changed_evt()
@@ -106,9 +107,9 @@ class FlyForm(ModelFormWidget):
             ),
             'h3:Previous IDs',
             segment(
-                ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
-                " ",
-                "FlyOriginApp",
+                # ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
+                ("origin", "origin_center", "origin_internal", "origin_external", "origin_id"),
+                "origin_obs",
             ),
             'h3:Thermal Printer',
             segment(
@@ -151,6 +152,22 @@ class FlyForm(ModelFormWidget):
                     self._new_genotype.value = ''
         else:
             self._new_genotype.show()
+
+    def __on_origin(self):
+        if self.origin.value == self.model.ORIGINS.center:
+            self.origin_center.show()
+            self.origin_internal.hide()
+            self.origin_external.hide()
+        elif self.origin.value == self.model.ORIGINS.internal:
+            self.origin_center.hide()
+            self.origin_internal.show()
+            self.origin_external.hide()
+        elif self.origin.value == self.model.ORIGINS.external:
+            self.origin_center.hide()
+            self.origin_internal.hide()
+            self.origin_external.show()
+        else:
+            raise ValueError("Invalid origin value")
 
     def __wolbachia_changed_evt(self):
         if self.wolbachia.value:

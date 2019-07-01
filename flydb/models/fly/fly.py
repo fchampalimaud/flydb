@@ -1,5 +1,7 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
+from model_utils import Choices
 
 from .fly_permission import FlyPermission
 
@@ -11,6 +13,12 @@ class AbstractFly(models.Model):
     Must be compatible with Congento model scheme!
     """
 
+    ORIGINS = Choices(
+        ("center", "Stock Center"),
+        ("internal", "Internal Lab"),
+        ("external", "External Lab"),
+    )
+
     # Fields shared with other congento animal models
     created = models.DateTimeField("Created", auto_now_add=True)
     modified = models.DateTimeField("Updated", auto_now=True)
@@ -18,6 +26,10 @@ class AbstractFly(models.Model):
     # Specific fields for this animal model
     category = models.ForeignKey("Category", on_delete=models.PROTECT, null=True, blank=True)
     species = models.ForeignKey("Species", on_delete=models.PROTECT)
+    origin = models.CharField(
+        max_length=8, choices=ORIGINS, default=ORIGINS.center
+    )
+    origin_center = models.ForeignKey(to="flydb.StockCenter", on_delete=models.PROTECT, verbose_name="stock center", null=True, blank=True, related_name="fly_stocks")
 
     genotype = models.CharField(max_length=255, blank=True)
     chrx = models.CharField(max_length=60, verbose_name="chrX", blank=True)
@@ -70,13 +82,25 @@ class Fly(AbstractFly):
         max_length=30, verbose_name="Local", blank=True
     )
 
-    # TODO modify the legacy source system to an origin table
+    # FIXME remove the legacy fields, keep the origin fields below
     legacysource = models.ForeignKey(
         "LegacySource", null=True, verbose_name="Source", on_delete=models.SET_NULL
     )
     legacy1 = models.CharField(max_length=30, verbose_name="Legacy ID 1", blank=True)
     legacy2 = models.CharField(max_length=30, verbose_name="Legacy ID 2", blank=True)
     legacy3 = models.CharField(max_length=30, verbose_name="Legacy ID 3", blank=True)
+    origin_internal = models.ForeignKey(
+        to="users.Group",
+        on_delete=models.PROTECT,
+        verbose_name="lab name",
+        null=True,
+        blank=True,
+        # limit_choices_to={"accesses__animaldb": "flydb"},
+    )
+    origin_external = models.CharField(max_length=100, verbose_name="lab name", blank=True)
+    origin_id = models.CharField(max_length=20, verbose_name="original ID", blank=True)
+    origin_obs = models.TextField(verbose_name="observations", blank=True)
+    # TODO legacy fields are deprecated, do not use
 
     died = models.BooleanField("Died")  # TODO change to is_dead
 
@@ -104,6 +128,27 @@ class Fly(AbstractFly):
             return self.genotype
 
         return str(self.id)
+
+    def clean(self):
+        msg = "This field is required"
+
+        if self.origin == self.ORIGINS.center:
+            if not self.origin_center:
+                raise ValidationError({"origin_center": msg})
+            self.origin_internal = None
+            self.origin_external = ""
+        elif self.origin == self.ORIGINS.internal:
+            if not self.origin_internal:
+                raise ValidationError({"origin_internal": msg})
+            self.origin_center = None
+            self.origin_external = ""
+        elif self.origin == self.ORIGINS.external:
+            if not self.origin_external:
+                raise ValidationError({"origin_external": msg})
+            self.origin_center = None
+            self.origin_internal = None
+        else:
+            raise ValueError("Invalid origin")
 
     def get_genotype(self):
         """
