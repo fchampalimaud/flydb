@@ -51,6 +51,7 @@ class FlyForm(ModelFormWidget):
         self.died.label = "Stock is dead"
 
         self.origin_obs.style = "height: 4em"
+        # self.special_husbandry_conditions.style = "height: 4em"
 
         # self.wolbachia.label_visible = False
         # self.virus_treatment.label_visible = False
@@ -113,6 +114,7 @@ class FlyForm(ModelFormWidget):
                 ('isogenization', 'background', 'generations', ' '),
                 ' ',
                 'HospitalizationAdminApp',
+                "special_husbandry_conditions",
             ),
             'h3:Previous IDs',
             segment(

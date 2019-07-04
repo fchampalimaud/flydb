@@ -43,6 +43,8 @@ class AbstractFly(models.Model):
     bal3 = models.CharField(max_length=60, verbose_name="bal3", blank=True)
     chru = models.CharField(max_length=60, verbose_name="chrU", blank=True)
 
+    special_husbandry_conditions = models.TextField(blank=True)
+
     line_description = models.TextField(blank=True)
 
     class Meta:
