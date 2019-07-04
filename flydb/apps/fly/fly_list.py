@@ -76,8 +76,6 @@ class FlyApp(ModelAdminWidget):
 
         super().__init__(*args, **kwargs)
 
-        self._list.custom_filter_labels = {"public": "Shared with Congento"}
-
     def get_toolbar_buttons(self, has_add_permission=False):
         toolbar = super().get_toolbar_buttons(has_add_permission)
         return tuple([toolbar] + ["_unknown_filter"])
