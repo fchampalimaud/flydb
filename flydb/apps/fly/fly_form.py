@@ -20,6 +20,16 @@ BDSC_CATEGORIES_HELP_TAG = """
 </a>
 """
 
+FLYBASE_LINK_TAG = """
+<a
+    href="https://flybase.org/reports/%s.html"
+    target="_blank"
+>
+    <i class="external alternate link teal icon"></i>
+</a>
+"""
+
+
 class FlyForm(ModelFormWidget):
 
     READ_ONLY = ['created', 'modified']
@@ -39,6 +49,9 @@ class FlyForm(ModelFormWidget):
         )
 
         super().__init__(*args, **kwargs)
+
+        if self.flybase_id.value:
+            self.flybase_id.label += FLYBASE_LINK_TAG % self.flybase_id.value
 
         self.categories.label += BDSC_CATEGORIES_HELP_TAG
 
@@ -92,7 +105,7 @@ class FlyForm(ModelFormWidget):
 
         default = [
             segment(
-                ("species", "internal_id", 'location'),
+                ("species", "flybase_id", "internal_id", 'location'),
                 "categories",
                 no_columns("died"),
                 no_columns("public"),

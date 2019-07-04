@@ -71,6 +71,10 @@ class Fly(AbstractFly):
         verbose_name="internal ID", max_length=20, blank=True, unique=True
     )
 
+    flybase_id = models.CharField(
+        verbose_name="FlyBase ID", max_length=11, null=True, blank=True, unique=True
+    )
+
     printable_comment = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
 
     location = models.CharField(
@@ -135,6 +139,10 @@ class Fly(AbstractFly):
     def clean(self):
         errors_dict = {"__all__": []}
         msg = "This field is required."
+
+        # Clean FlyBase ID
+        if len(self.flybase_id) != 11 and not self.flybase_id.startswith('FB'):
+            errors_dict["flybase_id"] = "Invalid ID"
 
         # Dead stock may not be shared
         if self.public and self.died:
