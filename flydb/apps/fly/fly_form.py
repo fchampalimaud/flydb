@@ -57,7 +57,6 @@ class FlyForm(ModelFormWidget):
 
         self.public.checkbox_type = ""
         self.public.label_visible = False
-        self.public.label = "Share with Congento network"
 
         self.died.checkbox_type = ""
         self.died.label_visible = False

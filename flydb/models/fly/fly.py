@@ -54,7 +54,7 @@ class AbstractFly(models.Model):
 
 
 class Fly(AbstractFly):
-    public = models.BooleanField("Public", default=False)
+    public = models.BooleanField(verbose_name="public through Congento", default=False)
 
     comments = models.TextField(blank=True)
 
