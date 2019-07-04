@@ -68,7 +68,7 @@ class Fly(AbstractFly):
     # TODO what about stocks belonging to a group but managed by the platform?
 
     internal_id = models.CharField(
-        verbose_name="internal ID", max_length=20, blank=True, unique=True
+        verbose_name="internal ID", max_length=20, null=True, blank=True, unique=True
     )
 
     flybase_id = models.CharField(
