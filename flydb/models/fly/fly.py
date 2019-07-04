@@ -52,6 +52,14 @@ class AbstractFly(models.Model):
         verbose_name = "fly"
         verbose_name_plural = "flies"
 
+    def stock_id(self):
+        try:
+            return self.internal_id
+        except AttributeError:
+            return self.pk
+
+    stock_id.short_description = "Stock ID"
+
 
 class Fly(AbstractFly):
     public = models.BooleanField(verbose_name="public through Congento", default=False)
