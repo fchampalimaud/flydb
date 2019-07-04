@@ -53,13 +53,16 @@ class AbstractFly(models.Model):
         verbose_name = "fly"
         verbose_name_plural = "flies"
 
-    def stock_id(self):
+    def __str__(self):
+        return f"Stock {self.get_stock_id()}"
+
+    def get_stock_id(self):
         try:
-            return self.internal_id
+            return self.internal_id or self.pk
         except AttributeError:
             return self.pk
 
-    stock_id.short_description = "Stock ID"
+    get_stock_id.short_description = "Stock ID"
 
 
 class Fly(AbstractFly):
@@ -137,14 +140,7 @@ class Fly(AbstractFly):
 
     # objects = FlyQuerySet.as_manager()
 
-    def __str__(self):
-        if self.internal_id:
-            return self.internal_id
 
-        if self.genotype:
-            return self.genotype
-
-        return str(self.id)
 
     def clean(self):
         errors_dict = {"__all__": []}

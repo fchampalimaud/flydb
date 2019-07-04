@@ -16,8 +16,7 @@ class FlyApp(ModelAdminWidget):
     EDITFORM_CLASS = FlyForm
 
     LIST_DISPLAY = [
-        "stock_id",
-        "internal_id",
+        "get_stock_id",
         "species",
         "genotype",
         "origin",
