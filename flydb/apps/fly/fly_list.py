@@ -26,7 +26,7 @@ class FlyApp(ModelAdminWidget):
 
     LIST_FILTER = [
         "species",
-        "category",
+        "categories",
         "origin",
         # "wolbachia",
         # "virus_treatment",

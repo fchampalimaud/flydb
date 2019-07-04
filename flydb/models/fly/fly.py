@@ -24,7 +24,8 @@ class AbstractFly(models.Model):
     modified = models.DateTimeField("Updated", auto_now=True)
 
     # Specific fields for this animal model
-    category = models.ForeignKey("Category", on_delete=models.PROTECT, null=True, blank=True)
+    categories = models.ManyToManyField(to="flydb.Category")
+    # category = models.ForeignKey("Category", on_delete=models.PROTECT, null=True, blank=True)
     species = models.ForeignKey("Species", on_delete=models.PROTECT)
     origin = models.CharField(
         max_length=8, choices=ORIGINS, default=ORIGINS.center
@@ -159,6 +160,9 @@ class Fly(AbstractFly):
         # Clean genotype
         if not self.chru and not any([self.chrx, self.chry, self.chr2, self.chr3, self.chr4]):
             errors_dict["__all__"].append("The genotype must be specified.")
+
+        # clean dict of empty values
+        errors_dict = {k: v for k, v in errors_dict.items() if v}
 
         raise ValidationError(errors_dict)
 

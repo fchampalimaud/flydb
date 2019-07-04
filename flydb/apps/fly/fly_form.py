@@ -2,11 +2,23 @@ from confapp import conf
 from pyforms_web.organizers import segment, no_columns
 from pyforms_web.web.middleware import PyFormsMiddleware
 from pyforms_web.widgets.django import ModelFormWidget
-from pyforms_web.allcontrols import ControlButton, ControlText
+from pyforms_web.allcontrols import ControlButton
 
 # from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
 
+
+BDSC_CATEGORIES_HELP_TAG = """
+<a
+    href="https://bdsc.indiana.edu/stocks/index.html"
+    target="_blank"
+    data-inverted=""
+    data-tooltip="Learn more about BDSC categories"
+    data-position="top center"
+>
+    <i class="help link teal icon"></i>
+</a>
+"""
 
 class FlyForm(ModelFormWidget):
 
@@ -27,6 +39,8 @@ class FlyForm(ModelFormWidget):
         )
 
         super().__init__(*args, **kwargs)
+
+        self.categories.label += BDSC_CATEGORIES_HELP_TAG
 
         self.public.checkbox_type = ""
         self.public.label_visible = False
@@ -77,7 +91,8 @@ class FlyForm(ModelFormWidget):
 
         default = [
             segment(
-                ("species", "category", "internal_id", 'location'),
+                ("species", "internal_id", 'location'),
+                "categories",
                 no_columns("died"),
                 no_columns("public"),
             ),
