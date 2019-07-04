@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 from django.db import models
 from model_utils import Choices
 
@@ -80,7 +81,8 @@ class Fly(AbstractFly):
     )
 
     flybase_id = models.CharField(
-        verbose_name="FlyBase ID", max_length=11, null=True, blank=True, unique=True
+        verbose_name="FlyBase ID", max_length=11, null=True, blank=True, unique=True,
+        validators=[MinLengthValidator(11)]
     )
 
     printable_comment = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
@@ -148,8 +150,12 @@ class Fly(AbstractFly):
         errors_dict = {"__all__": []}
         msg = "This field is required."
 
+        # Clean nullable IDs
+        self.internal_id = self.internal_id or None
+        self.flybase_id = self.flybase_id or None
+
         # Clean FlyBase ID
-        if len(self.flybase_id) != 11 and not self.flybase_id.startswith('FB'):
+        if self.flybase_id and not self.flybase_id.startswith('FB'):
             errors_dict["flybase_id"] = "Invalid ID"
 
         # Dead stock may not be shared
