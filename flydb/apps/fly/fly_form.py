@@ -147,12 +147,7 @@ class FlyForm(ModelFormWidget):
         ]
 
         if user.is_superuser:
-            default += [
-                segment(
-                    ("maintainer", "ownership"),
-                    ("created", "modified"),
-                )
-            ]
+            default += [("maintainer", "ownership", "created", "modified"),]
 
         return default
 
