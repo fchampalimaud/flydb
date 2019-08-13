@@ -29,7 +29,7 @@ class AbstractFly(models.Model):
     origin = models.CharField(
         max_length=8, choices=ORIGINS, default=ORIGINS.center
     )
-    origin_center = models.ForeignKey(to="flydb.StockCenter", on_delete=models.PROTECT, verbose_name="stock center", null=True, blank=True, related_name="fly_stocks")
+    origin_center = models.ForeignKey(to="flydb.StockCenter", on_delete=models.PROTECT, verbose_name="Stock center", null=True, blank=True, related_name="fly_stocks")
 
     genotype = models.CharField(max_length=255, blank=True)
     chrx = models.CharField(max_length=60, verbose_name="chrX", blank=True)
