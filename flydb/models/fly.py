@@ -127,10 +127,8 @@ class Fly(AbstractFly):
 
     died = models.BooleanField("Died")  # TODO change to is_dead
 
-    wolbachia = models.BooleanField("Wolbachia")
-    wolbachia_test_date = models.DateField("Last test", null=True, blank=True)
-    wolbachia_treatment = models.BooleanField("Treatment")
-    wolbachia_strain = models.CharField(max_length=100, blank=True)
+    wolbachia = models.BooleanField("Wolbachia infected", default=False)
+    wolbachia_treatment_date = models.DateField("Wolbachia treatment date", null=True, blank=True)
 
     virus_treatment = models.BooleanField("Virus Treatment")
     virus_treatment_date = models.DateField("Last treatment", null=True, blank=True)

@@ -70,11 +70,10 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
         self.origin_obs.style = "height: 4em"
         # self.special_husbandry_conditions.style = "height: 4em"
 
-        # self.wolbachia.label_visible = False
         # self.virus_treatment.label_visible = False
         # self.isogenization.label_visible = False
 
-        self.wolbachia_treatment.checkbox_type = ""
+        self.wolbachia.checkbox_type = ""
 
         # FIXME change these in the model verbose name
         self.chrx.label = "Chromosome X"
@@ -88,13 +87,11 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
         self.chru.label = "Unknown genotype"
 
         self.origin.changed_event = self.__on_origin
-        self.wolbachia.changed_event = self.__wolbachia_changed_evt
         self.isogenization.changed_event = self.__isogenization_changed_evt
         self.virus_treatment.changed_event = self.__virus_treatment_changed_evt
 
         self.__on_origin()
         self.__isogenization_changed_evt()
-        self.__wolbachia_changed_evt()
         self.__virus_treatment_changed_evt()
 
     @property
@@ -124,7 +121,7 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
             ),
             "h3:Extra Info",
             segment(
-                ('wolbachia', 'wolbachia_test_date', 'wolbachia_treatment', 'wolbachia_strain'),
+                ('wolbachia', 'wolbachia_treatment_date'),
                 ('virus_treatment', 'virus_treatment_date', ' ', ' '),
                 ('isogenization', 'background', 'generations', ' '),
                 ' ',
@@ -173,16 +170,6 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
             self.origin_external.show()
         else:
             raise ValueError("Invalid origin value")
-
-    def __wolbachia_changed_evt(self):
-        if self.wolbachia.value:
-            self.wolbachia_test_date.show()
-            self.wolbachia_treatment.show()
-            self.wolbachia_strain.show()
-        else:
-            self.wolbachia_test_date.hide()
-            self.wolbachia_treatment.hide()
-            self.wolbachia_strain.hide()
 
     def __virus_treatment_changed_evt(self):
         if self.virus_treatment.value:
