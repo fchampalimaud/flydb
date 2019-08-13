@@ -1,6 +1,7 @@
 from confapp import conf
 from django.contrib.auth.models import User
 from pyforms_web.web.middleware import PyFormsMiddleware
+
 # from notifications.tools import notify
 from pyforms_web.widgets.django import ModelAdminWidget
 from pyforms_web.widgets.django import ModelFormWidget
@@ -18,11 +19,15 @@ class HospiForm(ModelFormWidget):
 
         now = timezone.now()
         months_ago = now.date() - dateutil.relativedelta.relativedelta(months=6)
-        queryset = Hospitalization.objects.filter(fly=obj.fly, begin__gte=months_ago)
-        if queryset.count()>3:
-            msg = f'The fly [{obj.fly}], had more than 3 hospitalizations in the last 6 months.',
-            title = 'To many hospitalizations in the last 6 months.'
-            self.parent.warning( msg, title )
+        queryset = Hospitalization.objects.filter(
+            fly=obj.fly, start_date__gte=months_ago
+        )
+        if queryset.count() > 3:
+            msg = (
+                f"The fly [{obj.fly}], had more than 3 hospitalizations in the last 6 months.",
+            )
+            title = "To many hospitalizations in the last 6 months."
+            self.parent.warning(msg, title)
 
             # for user in User.objects.filter(is_superuser=True):
             #     notify(title, msg, user=user)
@@ -32,34 +37,18 @@ class HospiForm(ModelFormWidget):
 
 class HospitalizationAdminApp(ModelAdminWidget):
 
-
     MODEL = Hospitalization
 
-    TITLE = 'Special Care Periods'
+    TITLE = "Special Care Periods"
 
-    LIST_DISPLAY = ['begin', 'end']
+    LIST_DISPLAY = ["start_date", "end_date"]
 
     # formset of the edit form
-    FIELDSETS = [
-        ('begin', 'end')
-    ]
+    FIELDSETS = [("start_date", "end_date")]
 
-    LIST_HEADERS = ['Begin', 'End']
-
-    # AUTHORIZED_GROUPS   = ['superuser'] #groups with authorization to visualize the app
+    LIST_HEADERS = ["start_date", "end_date"]
 
     EDITFORM_CLASS = HospiForm
 
     USE_DETAILS_TO_ADD = False
     USE_DETAILS_TO_EDIT = False
-
-    ########################################################
-    #### ORQUESTRA CONFIGURATION ###########################
-    ########################################################
-    #LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    #ORQUESTRA_MENU = 'left'
-    #ORQUESTRA_MENU_ORDER = 7
-    #ORQUESTRA_MENU_ICON = 'tags green'
-    ########################################################
-
-
