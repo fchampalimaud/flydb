@@ -70,8 +70,6 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
         self.origin_obs.style = "height: 4em"
         # self.special_husbandry_conditions.style = "height: 4em"
 
-        # self.isogenization.label_visible = False
-
         self.wolbachia.checkbox_type = ""
 
         # FIXME change these in the model verbose name
@@ -86,10 +84,8 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
         self.chru.label = "Unknown genotype"
 
         self.origin.changed_event = self.__on_origin
-        self.isogenization.changed_event = self.__isogenization_changed_evt
 
         self.__on_origin()
-        self.__isogenization_changed_evt()
 
     @property
     def title(self):
@@ -119,8 +115,8 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
             "h3:Extra Info",
             segment(
                 ('wolbachia', 'wolbachia_treatment_date'),
-                ('isogenization', 'background', 'generations', ' '),
                 ('virus_treatment_date', ' '),
+                ('isogenization_background', ' '),
                 ' ',
                 'HospitalizationAdminApp',
                 "special_husbandry_conditions",
@@ -167,11 +163,3 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
             self.origin_external.show()
         else:
             raise ValueError("Invalid origin value")
-
-    def __isogenization_changed_evt(self):
-        if self.isogenization.value:
-            self.background.show()
-            self.generations.show()
-        else:
-            self.background.hide()
-            self.generations.hide()

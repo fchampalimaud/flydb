@@ -132,10 +132,8 @@ class Fly(AbstractFly):
 
     virus_treatment_date = models.DateField("Virus treatment date", null=True, blank=True)
 
-    isogenization = models.BooleanField("Isogenization")
-    background = models.CharField(max_length=100, blank=True)
-    generations = models.PositiveSmallIntegerField(
-        verbose_name="# generations", null=True, blank=True
+    isogenization_background = models.CharField(
+        verbose_name="Isogenization background", max_length=100, blank=True
     )
 
     objects = FlyQuerySet.as_manager()
