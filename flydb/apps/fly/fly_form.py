@@ -96,41 +96,34 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
 
     def get_fieldsets(self, default):
         default = [
-            segment(
-                ("species", "flybase_id", "internal_id", 'location'),
-                "categories",
-                no_columns("died"),
-                no_columns("public"),
-            ),
-            'h3:Genotype',
-            segment(
-                "info:Try to fill in all applicable fields. "
-                "If you are not certain of the genetic location, write the full "
-                "genotype in the <b>Unknown</b> field below.",
-                ("chrx", "chry", "chr2", "chr3", "chr4"),
-                ("bal1", " ", "bal2", "bal3", " "),
-                "-",
-                "chru",
-            ),
-            "h3:Extra Info",
-            segment(
-                ('wolbachia', 'wolbachia_treatment_date'),
-                ('virus_treatment_date', ' '),
-                ('isogenization_background', ' '),
-                ' ',
-                'HospitalizationAdminApp',
-                "special_husbandry_conditions",
-            ),
-            'h3:Previous IDs',
-            segment(
-                # ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
-                ("origin", "origin_center", "origin_internal", "origin_external", "origin_id"),
-                "origin_obs",
-            ),
-            'h3:Thermal Printer',
-            segment(
-                ('printable_comment', "_print"),
-            ),
+            {
+                "1:<i class='file alternate outline icon'></i>General": [
+                        ("species", "flybase_id", "internal_id", 'location'),
+                        "categories",
+                        no_columns("died"),
+                        no_columns("public"),
+                ],
+                "2:<i class='dna icon'></i>Genotype": [
+                    "info:Try to fill in all applicable fields. "
+                    "If you are not certain of the genetic location, write the full "
+                    "genotype in the <b>Unknown</b> field below.",
+                    ("chrx", "chry", "chr2", "chr3", "chr4"),
+                    ("bal1", " ", "bal2", "bal3", " "),
+                    "-",
+                    "chru",
+                ],
+                "3:<i class='home icon'></i>Origin": [
+                    # ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
+                    ("origin", "origin_center", "origin_internal", "origin_external", "origin_id"),
+                    "origin_obs",
+                ],
+                "4:<i class='plus square icon'></i>Special Care": [
+                    ('wolbachia', 'wolbachia_treatment_date', 'virus_treatment_date', 'isogenization_background'),
+                    "special_husbandry_conditions",
+                    'HospitalizationAdminApp',
+                ],
+                "5:<i class='print icon'></i>Thermal Printer": [('printable_comment', "_print"),],
+            },
             segment(
                 "info:You can use the <b>Line description</b> field below to "
                 "provide more details. Use the <b>Comments</b> field below for "

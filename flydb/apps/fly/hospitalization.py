@@ -11,6 +11,7 @@ import dateutil.relativedelta
 
 class HospiForm(ModelFormWidget):
 
+    LAYOUT_POSITION = conf.ORQUESTRA_NEW_WINDOW
 
     def save_form_event(self, obj):
         res = super().save_form_event(obj)
@@ -34,7 +35,7 @@ class HospitalizationAdminApp(ModelAdminWidget):
 
     MODEL = Hospitalization
 
-    TITLE = 'Special Care'
+    TITLE = 'Special Care Periods'
 
     LIST_DISPLAY = ['begin', 'end']
 
@@ -48,6 +49,9 @@ class HospitalizationAdminApp(ModelAdminWidget):
     # AUTHORIZED_GROUPS   = ['superuser'] #groups with authorization to visualize the app
 
     EDITFORM_CLASS = HospiForm
+
+    USE_DETAILS_TO_ADD = False
+    USE_DETAILS_TO_EDIT = False
 
     ########################################################
     #### ORQUESTRA CONFIGURATION ###########################
