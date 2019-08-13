@@ -130,8 +130,7 @@ class Fly(AbstractFly):
     wolbachia = models.BooleanField("Wolbachia infected", default=False)
     wolbachia_treatment_date = models.DateField("Wolbachia treatment date", null=True, blank=True)
 
-    virus_treatment = models.BooleanField("Virus Treatment")
-    virus_treatment_date = models.DateField("Last treatment", null=True, blank=True)
+    virus_treatment_date = models.DateField("Virus treatment date", null=True, blank=True)
 
     isogenization = models.BooleanField("Isogenization")
     background = models.CharField(max_length=100, blank=True)
