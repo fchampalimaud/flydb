@@ -14,7 +14,6 @@ class FlyDBConfig(AppConfig):
         from .sources import FlySourceApp
         # from .location_app import LocationAdminApp
         # from .supplier_app import SupplierAdminApp  # FIXME no data -> delete
-        # from .group import GroupAdminApp
 
         global FlyApp
         global FlySpeciesApp
@@ -22,5 +21,4 @@ class FlyDBConfig(AppConfig):
         global FlyLegacySourceApp
         global FlySourceApp
         # global LocationAdminApp
-        global SupplierAdminApp
-        # global GroupAdminApp
+        # global SupplierAdminApp

@@ -4,9 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from model_utils import Choices
 
-from .fly_permission import FlyPermission
-
-# from .fly_queryset import FlyQuerySet
+from flydb.querysets import FlyQuerySet
 
 
 class AbstractFly(models.Model):
@@ -74,10 +72,14 @@ class Fly(AbstractFly):
         to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True
     )
     ownership = models.ForeignKey(
-        to="auth.Group", on_delete=models.PROTECT, null=True, blank=True
+        to="users.Group", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="fly_stocks",
     )  # FIXME use users.Group
 
     # TODO what about stocks belonging to a group but managed by the platform?
+    # consider using a flag
+    # [ ] maintained by the facility
+    # or just leave it be, by default facility members can manage all stocks
 
     internal_id = models.CharField(
         verbose_name="internal ID", max_length=20, null=True, blank=True, unique=True
@@ -115,6 +117,7 @@ class Fly(AbstractFly):
         verbose_name="lab name",
         null=True,
         blank=True,
+        related_name="fly_stocks_shared",
         # limit_choices_to={"accesses__animaldb": "flydb"},
     )
     origin_external = models.CharField(max_length=100, verbose_name="lab name", blank=True)
@@ -138,7 +141,7 @@ class Fly(AbstractFly):
         verbose_name="# generations", null=True, blank=True
     )
 
-    # objects = FlyQuerySet.as_manager()
+    objects = FlyQuerySet.as_manager()
 
 
 

@@ -7,7 +7,12 @@ from pyforms_web.allcontrols import ControlButton
 # from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
 
+from users.apps._utils import FormPermissionsMixin
+from users.apps._utils import limit_choices_to_database
+# FIXME import this when users model is not present
 
+# FIXME pyforms now supports help_text
+# transform this into a link, change icon to external ref
 BDSC_CATEGORIES_HELP_TAG = """
 <a
     href="https://bdsc.indiana.edu/stocks/index.html"
@@ -30,9 +35,9 @@ FLYBASE_LINK_TAG = """
 """
 
 
-class FlyForm(ModelFormWidget):
+class FlyForm(FormPermissionsMixin, ModelFormWidget):
 
-    READ_ONLY = ['created', 'modified']
+    CLOSE_ON_REMOVE = True
 
     INLINES = [
         HospitalizationAdminApp,
@@ -100,8 +105,6 @@ class FlyForm(ModelFormWidget):
             pass  # apparently it defaults to App TITLE
 
     def get_fieldsets(self, default):
-        user = PyFormsMiddleware.user()
-
         default = [
             segment(
                 ("species", "flybase_id", "internal_id", 'location'),
@@ -145,11 +148,15 @@ class FlyForm(ModelFormWidget):
                 ("line_description", "comments"),
             ),
         ]
-
-        if user.is_superuser:
-            default += [("maintainer", "ownership", "created", "modified"),]
+        if self.object_pk:  # editing existing object
+            default += [("maintainer", "ownership", "created", "modified")]
 
         return default
+
+    def get_related_field_queryset(self, field, queryset):
+        animaldb = self.model._meta.app_label
+        queryset = limit_choices_to_database(animaldb, field, queryset)
+        return queryset
 
     def __on_origin(self):
         if self.origin.value == self.model.ORIGINS.center:

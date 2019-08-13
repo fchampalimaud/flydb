@@ -5,6 +5,8 @@ from flydb.models import Fly
 
 from .fly_form import FlyForm
 
+from users.apps._utils import limit_choices_to_database
+# FIXME import this when users model is not present
 
 class FlyApp(ModelAdminWidget):
 
@@ -85,3 +87,8 @@ class FlyApp(ModelAdminWidget):
                 qs = qs.exclude(chru__exact="")
 
             return qs
+
+    def get_related_field_queryset(self, request, list_queryset, field, queryset):
+        animaldb = self.model._meta.app_label
+        queryset = limit_choices_to_database(animaldb, field, queryset)
+        return queryset
