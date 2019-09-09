@@ -29,6 +29,7 @@ class HospiForm(ModelFormWidget):
             title = "To many hospitalizations in the last 6 months."
             self.parent.warning(msg, title)
 
+            # FIXME enable notification
             # for user in User.objects.filter(is_superuser=True):
             #     notify(title, msg, user=user)
 
@@ -39,14 +40,11 @@ class HospitalizationAdminApp(ModelAdminWidget):
 
     MODEL = Hospitalization
 
-    TITLE = "Special Care Periods"
-
     LIST_DISPLAY = ["start_date", "end_date"]
 
-    # formset of the edit form
-    FIELDSETS = [("start_date", "end_date")]
+    LIST_HEADERS = ["Start date", "End date"]
 
-    LIST_HEADERS = ["start_date", "end_date"]
+    FIELDSETS = [("start_date", "end_date")]
 
     EDITFORM_CLASS = HospiForm
 
