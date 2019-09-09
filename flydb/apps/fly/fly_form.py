@@ -21,7 +21,7 @@ BDSC_CATEGORIES_HELP_TAG = """
     data-tooltip="Learn more about BDSC categories"
     data-position="top center"
 >
-    <i class="help link teal icon"></i>
+    <i class="help circle icon"></i>
 </a>
 """
 
@@ -30,7 +30,8 @@ FLYBASE_LINK_TAG = """
     href="https://flybase.org/reports/%s.html"
     target="_blank"
 >
-    <i class="external alternate link teal icon"></i>
+    <i class="external alternate link
+     icon"></i>
 </a>
 """
 
