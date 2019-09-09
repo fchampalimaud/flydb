@@ -32,15 +32,15 @@ class AbstractFly(models.Model):
     origin_center = models.ForeignKey(to="flydb.StockCenter", on_delete=models.PROTECT, verbose_name="Stock center", null=True, blank=True, related_name="fly_stocks")
 
     genotype = models.CharField(max_length=255, blank=True)
-    chrx = models.CharField(max_length=60, verbose_name="chrX", blank=True)
-    chry = models.CharField(max_length=60, verbose_name="chrY", blank=True)
-    chr2 = models.CharField(max_length=60, verbose_name="chr2", blank=True)
-    chr3 = models.CharField(max_length=60, verbose_name="chr3", blank=True)
-    chr4 = models.CharField(max_length=60, verbose_name="chr4", blank=True)
-    bal1 = models.CharField(max_length=60, verbose_name="bal1", blank=True)
-    bal2 = models.CharField(max_length=60, verbose_name="bal2", blank=True)
-    bal3 = models.CharField(max_length=60, verbose_name="bal3", blank=True)
-    chru = models.CharField(max_length=60, verbose_name="chrU", blank=True)
+    chrx = models.CharField(max_length=60, verbose_name="Chromosome X", blank=True)
+    chry = models.CharField(max_length=60, verbose_name="Chromosome Y", blank=True)
+    chr2 = models.CharField(max_length=60, verbose_name="Chromosome 2", blank=True)
+    chr3 = models.CharField(max_length=60, verbose_name="Chromosome 3", blank=True)
+    chr4 = models.CharField(max_length=60, verbose_name="Chromosome 4", blank=True)
+    bal1 = models.CharField(max_length=60, verbose_name="Balancer 1", blank=True)
+    bal2 = models.CharField(max_length=60, verbose_name="Balancer 2", blank=True)
+    bal3 = models.CharField(max_length=60, verbose_name="Balancer 3", blank=True)
+    chru = models.CharField(max_length=60, verbose_name="Unknown genotype", blank=True)
 
     special_husbandry_conditions = models.TextField(blank=True)
 
@@ -82,7 +82,7 @@ class Fly(AbstractFly):
     # or just leave it be, by default facility members can manage all stocks
 
     internal_id = models.CharField(
-        verbose_name="internal ID", max_length=20, null=True, blank=True, unique=True
+        verbose_name="Internal ID", max_length=20, null=True, blank=True, unique=True
     )
 
     flybase_id = models.CharField(
@@ -114,18 +114,18 @@ class Fly(AbstractFly):
     origin_internal = models.ForeignKey(
         to="users.Group",
         on_delete=models.PROTECT,
-        verbose_name="lab name",
+        verbose_name="Lab name",
         null=True,
         blank=True,
         related_name="fly_stocks_shared",
         # limit_choices_to={"accesses__animaldb": "flydb"},
     )
-    origin_external = models.CharField(max_length=100, verbose_name="lab name", blank=True)
-    origin_id = models.CharField(max_length=20, verbose_name="original ID", blank=True)
-    origin_obs = models.TextField(verbose_name="observations", blank=True)
+    origin_external = models.CharField(max_length=100, verbose_name="Lab name", blank=True)
+    origin_id = models.CharField(max_length=20, verbose_name="Original ID", blank=True)
+    origin_obs = models.TextField(verbose_name="Observations", blank=True)
     # TODO legacy fields are deprecated, do not use
 
-    died = models.BooleanField("Died")  # TODO change to is_dead
+    died = models.BooleanField(verbose_name="Stock is dead")  # TODO change to is_dead
 
     wolbachia = models.BooleanField("Wolbachia infected", default=False)
     wolbachia_treatment_date = models.DateField("Wolbachia treatment date", null=True, blank=True)

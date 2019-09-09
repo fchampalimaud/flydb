@@ -65,23 +65,11 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
 
         self.died.checkbox_type = ""
         self.died.label_visible = False
-        self.died.label = "Stock is dead"
 
         self.origin_obs.style = "height: 4em"
         self.special_husbandry_conditions.style = "height: 4em"
 
         self.wolbachia.checkbox_type = ""
-
-        # FIXME change these in the model verbose name
-        self.chrx.label = "Chromosome X"
-        self.chry.label = "Chromosome Y"
-        self.bal1.label = "Balancer 1"
-        self.chr2.label = "Chromosome 2"
-        self.bal2.label = "Balancer 2"
-        self.chr3.label = "Chromosome 3"
-        self.bal3.label = "Balancer 3"
-        self.chr4.label = "Chromosome 4"
-        self.chru.label = "Unknown genotype"
 
         self.origin.changed_event = self.__on_origin
 
