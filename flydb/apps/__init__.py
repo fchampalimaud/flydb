@@ -10,6 +10,7 @@ class FlyDBConfig(AppConfig):
         from .fly.fly_list import FlyApp
         from .species import FlySpeciesApp
         from .categories import FlyCategoryApp
+        from .stockcenters import FlyStockCenterApp
         # from .legacysources import FlyLegacySourceApp
         # from .sources import FlySourceApp
         # from .location_app import LocationAdminApp
@@ -18,6 +19,7 @@ class FlyDBConfig(AppConfig):
         global FlyApp
         global FlySpeciesApp
         global FlyCategoryApp
+        global FlyStockCenterApp
         # global FlyLegacySourceApp
         # global FlySourceApp
         # global LocationAdminApp
