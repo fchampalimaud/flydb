@@ -10,15 +10,15 @@ class FlyDBConfig(AppConfig):
         from .fly.fly_list import FlyApp
         from .species import FlySpeciesApp
         from .categories import FlyCategoryApp
-        from .legacysources import FlyLegacySourceApp
-        from .sources import FlySourceApp
+        # from .legacysources import FlyLegacySourceApp
+        # from .sources import FlySourceApp
         # from .location_app import LocationAdminApp
         # from .supplier_app import SupplierAdminApp  # FIXME no data -> delete
 
         global FlyApp
         global FlySpeciesApp
         global FlyCategoryApp
-        global FlyLegacySourceApp
-        global FlySourceApp
+        # global FlyLegacySourceApp
+        # global FlySourceApp
         # global LocationAdminApp
         # global SupplierAdminApp
