@@ -14,10 +14,10 @@ class FlySpeciesForm(ModelFormWidget):
 
 class FlySpeciesApp(ModelAdminWidget):
 
-    UID = 'fly-species'
+    UID = "fly-species"
     MODEL = Species
 
-    TITLE = 'Species'
+    TITLE = "Species"
 
     EDITFORM_CLASS = FlySpeciesForm
 
@@ -27,9 +27,9 @@ class FlySpeciesApp(ModelAdminWidget):
     USE_DETAILS_TO_EDIT = False  # required to have form in NEW_TAB
 
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = 'left>FlyApp'
+    ORQUESTRA_MENU = "left>FlyApp"
     ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON = 'cog'
+    ORQUESTRA_MENU_ICON = "cog"
 
     @classmethod
     def has_permissions(cls, user):

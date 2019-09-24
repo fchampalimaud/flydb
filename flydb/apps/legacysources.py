@@ -14,10 +14,10 @@ class FlyLegacySourceForm(ModelFormWidget):
 
 class FlyLegacySourceApp(ModelAdminWidget):
 
-    UID = 'fly-legacysources'
+    UID = "fly-legacysources"
     MODEL = LegacySource
 
-    TITLE = 'Legacy Sources'
+    TITLE = "Legacy Sources"
 
     EDITFORM_CLASS = FlyLegacySourceForm
 
@@ -25,9 +25,9 @@ class FlyLegacySourceApp(ModelAdminWidget):
     USE_DETAILS_TO_EDIT = False  # required to have form in NEW_TAB
 
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = 'left>FlyApp'
+    ORQUESTRA_MENU = "left>FlyApp"
     ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON = 'cog'
+    ORQUESTRA_MENU_ICON = "cog"
 
     @classmethod
     def has_permissions(cls, user):

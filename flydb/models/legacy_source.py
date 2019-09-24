@@ -2,8 +2,8 @@ from django.db import models
 
 
 class LegacySource(models.Model):
-    legacysource_id = models.AutoField('Id', primary_key=True)
-    legacysource_name = models.CharField('Source', max_length=30)
+    legacysource_id = models.AutoField("Id", primary_key=True)
+    legacysource_name = models.CharField("Source", max_length=30)
 
     class Meta:
         verbose_name = "Source legacy"

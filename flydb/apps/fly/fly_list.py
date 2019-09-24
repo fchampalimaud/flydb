@@ -8,6 +8,7 @@ from .fly_form import FlyForm
 from users.apps._utils import limit_choices_to_database
 # FIXME import this when users model is not present
 
+
 class FlyApp(ModelAdminWidget):
 
     UID = "flydb"
@@ -83,10 +84,10 @@ class FlyApp(ModelAdminWidget):
         return tuple([toolbar] + ["_unknown_filter"])
 
     def get_queryset(self, request, qs):
-            if self._unknown_filter.value:
-                qs = qs.exclude(chru__exact="")
+        if self._unknown_filter.value:
+            qs = qs.exclude(chru__exact="")
 
-            return qs
+        return qs
 
     def get_related_field_queryset(self, request, list_queryset, field, queryset):
         animaldb = self.model._meta.app_label

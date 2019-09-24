@@ -40,19 +40,13 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
 
     CLOSE_ON_REMOVE = True
 
-    INLINES = [
-        HospitalizationAdminApp,
-    ]
+    INLINES = [HospitalizationAdminApp]
 
     LAYOUT_POSITION = conf.ORQUESTRA_NEW_TAB
 
     def __init__(self, *args, **kwargs):
 
-        self._print = ControlButton(
-            'Print',
-            default=None,
-            css='basic blue',
-        )
+        self._print = ControlButton("Print", default=None, css="basic blue")
 
         super().__init__(*args, **kwargs)
 

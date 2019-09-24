@@ -14,10 +14,10 @@ class FlySourceForm(ModelFormWidget):
 
 class FlySourceApp(ModelAdminWidget):
 
-    UID = 'fly-sources'
+    UID = "fly-sources"
     MODEL = Source
 
-    TITLE = 'Sources'
+    TITLE = "Sources"
 
     EDITFORM_CLASS = FlySourceForm
 
@@ -25,9 +25,9 @@ class FlySourceApp(ModelAdminWidget):
     USE_DETAILS_TO_EDIT = False  # required to have form in NEW_TAB
 
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = 'left>FlyApp'
+    ORQUESTRA_MENU = "left>FlyApp"
     ORQUESTRA_MENU_ORDER = 1
-    ORQUESTRA_MENU_ICON = 'cog'
+    ORQUESTRA_MENU_ICON = "cog"
 
     @classmethod
     def has_permissions(cls, user):

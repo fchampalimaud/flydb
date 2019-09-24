@@ -26,10 +26,15 @@ class AbstractFly(models.Model):
     categories = models.ManyToManyField(to="flydb.Category")
     # category = models.ForeignKey("Category", on_delete=models.PROTECT, null=True, blank=True)
     species = models.ForeignKey("Species", on_delete=models.PROTECT)
-    origin = models.CharField(
-        max_length=8, choices=ORIGINS, default=ORIGINS.center
+    origin = models.CharField(max_length=8, choices=ORIGINS, default=ORIGINS.center)
+    origin_center = models.ForeignKey(
+        to="flydb.StockCenter",
+        on_delete=models.PROTECT,
+        verbose_name="Stock center",
+        null=True,
+        blank=True,
+        related_name="fly_stocks",
     )
-    origin_center = models.ForeignKey(to="flydb.StockCenter", on_delete=models.PROTECT, verbose_name="Stock center", null=True, blank=True, related_name="fly_stocks")
 
     genotype = models.CharField(max_length=255, blank=True)
     chrx = models.CharField(max_length=60, verbose_name="Chromosome X", blank=True)
@@ -72,7 +77,10 @@ class Fly(AbstractFly):
         to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True
     )
     ownership = models.ForeignKey(
-        to="users.Group", on_delete=models.PROTECT, null=True, blank=True,
+        to="users.Group",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name="fly_stocks",
     )  # FIXME use users.Group
 
@@ -86,11 +94,17 @@ class Fly(AbstractFly):
     )
 
     flybase_id = models.CharField(
-        verbose_name="FlyBase ID", max_length=11, null=True, blank=True, unique=True,
-        validators=[MinLengthValidator(11)]
+        verbose_name="FlyBase ID",
+        max_length=11,
+        null=True,
+        blank=True,
+        unique=True,
+        validators=[MinLengthValidator(11)],
     )
 
-    printable_comment = models.CharField(max_length=30, verbose_name="Comment to print", blank=True)
+    printable_comment = models.CharField(
+        max_length=30, verbose_name="Comment to print", blank=True
+    )
 
     location = models.CharField(
         max_length=50,
@@ -106,7 +120,11 @@ class Fly(AbstractFly):
 
     # FIXME remove the legacy fields, keep the origin fields below
     legacysource = models.ForeignKey(
-        "LegacySource", null=True, blank=True, verbose_name="Source", on_delete=models.SET_NULL
+        "LegacySource",
+        null=True,
+        blank=True,
+        verbose_name="Source",
+        on_delete=models.SET_NULL,
     )
     legacy1 = models.CharField(max_length=30, verbose_name="Legacy ID 1", blank=True)
     legacy2 = models.CharField(max_length=30, verbose_name="Legacy ID 2", blank=True)
@@ -120,7 +138,9 @@ class Fly(AbstractFly):
         related_name="fly_stocks_shared",
         # limit_choices_to={"accesses__animaldb": "flydb"},
     )
-    origin_external = models.CharField(max_length=100, verbose_name="Lab name", blank=True)
+    origin_external = models.CharField(
+        max_length=100, verbose_name="Lab name", blank=True
+    )
     origin_id = models.CharField(max_length=20, verbose_name="Original ID", blank=True)
     origin_obs = models.TextField(verbose_name="Observations", blank=True)
     # TODO legacy fields are deprecated, do not use
@@ -128,17 +148,19 @@ class Fly(AbstractFly):
     died = models.BooleanField(verbose_name="Stock is dead")  # TODO change to is_dead
 
     wolbachia = models.BooleanField("Wolbachia infected", default=False)
-    wolbachia_treatment_date = models.DateField("Wolbachia treatment date", null=True, blank=True)
+    wolbachia_treatment_date = models.DateField(
+        "Wolbachia treatment date", null=True, blank=True
+    )
 
-    virus_treatment_date = models.DateField("Virus treatment date", null=True, blank=True)
+    virus_treatment_date = models.DateField(
+        "Virus treatment date", null=True, blank=True
+    )
 
     isogenization_background = models.CharField(
         verbose_name="Isogenization background", max_length=100, blank=True
     )
 
     objects = FlyQuerySet.as_manager()
-
-
 
     def clean(self):
         errors_dict = {"__all__": []}
@@ -149,7 +171,7 @@ class Fly(AbstractFly):
         self.flybase_id = self.flybase_id or None
 
         # Clean FlyBase ID
-        if self.flybase_id and not self.flybase_id.startswith('FB'):
+        if self.flybase_id and not self.flybase_id.startswith("FB"):
             errors_dict["flybase_id"] = "Invalid ID"
 
         # Dead stock may not be shared
@@ -176,7 +198,9 @@ class Fly(AbstractFly):
             raise ValueError("Invalid origin")
 
         # Clean genotype
-        if not self.chru and not any([self.chrx, self.chry, self.chr2, self.chr3, self.chr4]):
+        if not self.chru and not any(
+            [self.chrx, self.chry, self.chr2, self.chr3, self.chr4]
+        ):
             errors_dict["__all__"].append("The genotype must be specified.")
 
         # clean dict of empty values
