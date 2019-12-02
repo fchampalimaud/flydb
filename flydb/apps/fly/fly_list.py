@@ -1,12 +1,73 @@
 from confapp import conf
-from pyforms.controls import ControlCheckBox
+from pyforms_web.basewidget import BaseWidget
+from pyforms_web.organizers import no_columns, segment
+from pyforms.controls import ControlCheckBox, ControlFileUpload, ControlButton
 from pyforms_web.widgets.django import ModelAdminWidget
 from flydb.models import Fly
+from flydb.admin import FlyResource
 
 from .fly_form import FlyForm
 
 from users.apps._utils import limit_choices_to_database
+from tablib.core import Dataset, UnsupportedFormat
 # FIXME import this when users model is not present
+
+
+class FlyImportWidget(BaseWidget):
+    TITLE = 'Import Fly'   
+    
+    LAYOUT_POSITION = conf.ORQUESTRA_NEW_WINDOW
+    CREATE_BTN_LABEL = '<i class="upload icon"></i>Import'
+    HAS_CANCEL_BTN_ON_ADD = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+        self._csv_file = ControlFileUpload(label='Import CSV')
+        self._import_btn = ControlButton(
+            '<i class="upload icon"></i>Import',
+            default=self.__import_evt,
+            label_visible=False,
+            css='basic blue',
+            helptext='Import Fly from CSV file',
+        )
+
+        self.formset = [
+            '_csv_file',
+            '_import_btn'
+        ]
+
+    def __import_evt(self):
+
+        fly_resource = FlyResource()
+
+        if self._csv_file.filepath is not None:
+            dataset = Dataset()
+
+            try:
+                with open(self._csv_file.filepath, 'r') as f:
+                    imported_file = dataset.load(f.read())
+            except UnsupportedFormat as uf:
+                raise Exception("Unsupported format. Please select a CSV file with the Fly template columns")
+
+            # Test the import first
+            result = fly_resource.import_data(dataset, dry_run=True, use_transactions=True, collect_failed_rows=True)
+            if result.has_validation_errors():
+                val_errors = ''
+                for err in result.invalid_rows:
+                    val_errors += f'row {err.number}:<br><ul>'
+                    for key in err.field_specific_errors:
+                        val_errors += f'<li>{key} &rarr; {err.field_specific_errors[key][0]}</li>'
+                    for val in err.non_field_specific_errors:
+                        val_errors += f'<li>Non field specific &rarr; {val}</li>'
+                    val_errors += '</ul>'
+                raise Exception(f"Validation error(s) on row(s): {', '.join([str(err.number) for err in result.invalid_rows])} <br>{val_errors}")
+            elif result.has_errors():
+                raise Exception(f"Error detected that prevents importing on row(s): {', '.join([str(num) for num, _ in result.row_errors()])}")
+            else:
+                fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
+            
+            self.success("Fly file imported successfully!")
 
 
 class FlyApp(ModelAdminWidget):
