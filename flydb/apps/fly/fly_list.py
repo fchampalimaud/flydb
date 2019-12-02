@@ -140,11 +140,19 @@ class FlyApp(ModelAdminWidget):
             changed_event=self.populate_list,
         )
 
+        self._import_btn = ControlButton(
+            '<i class="upload icon"></i>Import',
+            default=self.__import_evt,
+            label_visible=False,
+            css='basic blue',
+            helptext='Import Fly from CSV file',
+        )
+
         super().__init__(*args, **kwargs)
 
     def get_toolbar_buttons(self, has_add_permission=False):
         toolbar = super().get_toolbar_buttons(has_add_permission)
-        return tuple([toolbar] + ["_unknown_filter"])
+        return tuple([no_columns(toolbar, "_import_btn")] + [" ", "_unknown_filter"])
 
     def get_queryset(self, request, qs):
         if self._unknown_filter.value:
@@ -156,3 +164,6 @@ class FlyApp(ModelAdminWidget):
         animaldb = self.model._meta.app_label
         queryset = limit_choices_to_database(animaldb, field, queryset)
         return queryset
+
+    def __import_evt(self):
+        FlyImportWidget(parent_win=self)
