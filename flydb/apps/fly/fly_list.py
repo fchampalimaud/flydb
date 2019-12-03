@@ -10,6 +10,9 @@ from .fly_form import FlyForm
 
 from users.apps._utils import limit_choices_to_database
 from tablib.core import Dataset, UnsupportedFormat
+import os
+from os.path import dirname
+import shutil
 # FIXME import this when users model is not present
 
 
@@ -49,6 +52,8 @@ class FlyImportWidget(BaseWidget):
                     imported_file = dataset.load(f.read())
             except UnsupportedFormat as uf:
                 raise Exception("Unsupported format. Please select a CSV file with the Fly template columns")
+            finally:
+                shutil.rmtree(dirname(self._csv_file.filepath))
 
             # Test the import first
             result = fly_resource.import_data(dataset, dry_run=True, use_transactions=True, collect_failed_rows=True)
