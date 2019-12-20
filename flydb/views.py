@@ -16,25 +16,24 @@ def get_client_ip(request):
 
 
 @login_required
-def print_barcode(request, url, returnRequest=True):
-
-    stock = Fly.objects.get(pk=url)
+def print_barcode(request, fly_url):
+    stock = Fly.objects.get(pk=fly_url)
     now = datetime.datetime.now()
 
-    if stock.loc1_location != None:
-        location = stock.loc1_location
+    if stock.location != None:
+        location = stock.location
     else:
         location = ""
 
     message = "%d|%s|%s|%s|%s|%s|%s|%s" % (
         stock.id,
-        stock.ccuid,
-        stock.lab.lab_name,
-        stock.genotype(),
+        stock.internal_id,
+        stock.ownership,
+        stock.get_genotype(),
         now.strftime("%Y-%m-%d"),
-        stock.print,
+        stock.printable_comment,
         location,
-        stock.legacy1,
+        stock.origin_id,
     )
 
     HOST = get_client_ip(request)
@@ -44,9 +43,8 @@ def print_barcode(request, url, returnRequest=True):
     s.connect((HOST, PORT))
     s.send(message)
     s.close()
-    resp = {"result": "ok"}
-    if returnRequest:
-        return HttpResponse(simplejson.dumps(resp), mimetype="application/json")
+
+    return HttpResponse('<script type="text/javascript">window.close()</script>') 
 
 
 @login_required
