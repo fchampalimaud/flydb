@@ -3,6 +3,7 @@ from pyforms_web.organizers import segment, no_columns
 from pyforms_web.web.middleware import PyFormsMiddleware
 from pyforms_web.widgets.django import ModelFormWidget
 from pyforms_web.allcontrols import ControlButton
+from django.urls import reverse
 
 # from flydb.models import Fly
 from .hospitalization import HospitalizationAdminApp
@@ -46,7 +47,10 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
 
     def __init__(self, *args, **kwargs):
 
-        self._print = ControlButton("Print", default=None, css="basic blue")
+        url = reverse('print_barcode', args=[kwargs.get('pk')])
+        self._print = ControlButton('<i class="ui icon print"></i>Print',
+                                    default='window.open("{0}", "_blank");'.format(url),
+                                    css="basic blue")
 
         super().__init__(*args, **kwargs)
 
