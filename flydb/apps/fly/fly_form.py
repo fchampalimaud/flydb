@@ -47,10 +47,13 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
 
     def __init__(self, *args, **kwargs):
 
-        url = reverse('print_barcode', args=[kwargs.get('pk')])
-        self._print = ControlButton('<i class="ui icon print"></i>Print',
-                                    default='window.open("{0}", "_blank");'.format(url),
-                                    css="basic blue")
+        if kwargs.get('pk'):
+            url = reverse('print_barcode', args=[kwargs.get('pk')])
+            self._print = ControlButton(
+                '<i class="ui icon print"></i>Print',
+                default='window.open("{0}", "_blank");'.format(url),
+                css="basic blue",
+            )
 
         super().__init__(*args, **kwargs)
 
@@ -122,7 +125,6 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
                 "special_husbandry_conditions",
                 "HospitalizationAdminApp",
             ),
-            segment("h3:Thermal Printer", ("printable_comment", "_print")),
             segment(
                 "info:You can use the <b>Line description</b> field below to "
                 "provide more details. Use the <b>Comments</b> field below for "
@@ -131,6 +133,7 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
             ),
         ]
         if self.object_pk:  # editing existing object
+            default.insert(4, segment("h3:Thermal Printer", ("printable_comment", "_print")))
             default += [("maintainer", "ownership", "created", "modified")]
 
         return default
