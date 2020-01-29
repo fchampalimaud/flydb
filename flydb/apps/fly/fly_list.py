@@ -1,24 +1,26 @@
+import os
+from os.path import dirname
+import shutil
+
 from confapp import conf
 from pyforms_web.basewidget import BaseWidget
 from pyforms_web.organizers import no_columns, segment
 from pyforms.controls import ControlCheckBox, ControlFileUpload, ControlButton
 from pyforms_web.widgets.django import ModelAdminWidget
+from tablib.core import Dataset, UnsupportedFormat
+
 from flydb.models import Fly
 from flydb.admin import FlyResource
 
 from .fly_form import FlyForm
 
+# FIXME fix this import when users model is not present
 from users.apps._utils import limit_choices_to_database
-from tablib.core import Dataset, UnsupportedFormat
-import os
-from os.path import dirname
-import shutil
-# FIXME import this when users model is not present
 
 
 class FlyImportWidget(BaseWidget):
-    TITLE = 'Import Fly'   
-    
+    TITLE = "Import Fly"
+
     LAYOUT_POSITION = conf.ORQUESTRA_NEW_WINDOW
     CREATE_BTN_LABEL = '<i class="upload icon"></i>Import'
     HAS_CANCEL_BTN_ON_ADD = False
@@ -26,19 +28,16 @@ class FlyImportWidget(BaseWidget):
     def __init__(self, *args, **kwargs):
         super().__init__()
 
-        self._csv_file = ControlFileUpload(label='Import CSV')
+        self._csv_file = ControlFileUpload(label="Import CSV")
         self._import_btn = ControlButton(
             '<i class="upload icon"></i>Import',
             default=self.__import_evt,
             label_visible=False,
-            css='basic blue',
-            helptext='Import Fly from CSV file',
+            css="basic blue",
+            helptext="Import Fly from CSV file",
         )
 
-        self.formset = [
-            '_csv_file',
-            '_import_btn'
-        ]
+        self.formset = ["_csv_file", "_import_btn"]
 
     def __import_evt(self):
 
@@ -48,30 +47,40 @@ class FlyImportWidget(BaseWidget):
             dataset = Dataset()
 
             try:
-                with open(self._csv_file.filepath, 'r') as f:
+                with open(self._csv_file.filepath, "r") as f:
                     imported_file = dataset.load(f.read())
             except UnsupportedFormat as uf:
-                raise Exception("Unsupported format. Please select a CSV file with the Fly template columns")
+                raise Exception(
+                    "Unsupported format. Please select a CSV file with the Fly template columns"
+                )
             finally:
                 shutil.rmtree(dirname(self._csv_file.filepath))
 
             # Test the import first
-            result = fly_resource.import_data(dataset, dry_run=True, use_transactions=True, collect_failed_rows=True)
+            result = fly_resource.import_data(
+                dataset, dry_run=True, use_transactions=True, collect_failed_rows=True
+            )
             if result.has_validation_errors():
-                val_errors = ''
+                val_errors = ""
                 for err in result.invalid_rows:
-                    val_errors += f'row {err.number}:<br><ul>'
+                    val_errors += f"row {err.number}:<br><ul>"
                     for key in err.field_specific_errors:
-                        val_errors += f'<li>{key} &rarr; {err.field_specific_errors[key][0]}</li>'
+                        val_errors += (
+                            f"<li>{key} &rarr; {err.field_specific_errors[key][0]}</li>"
+                        )
                     for val in err.non_field_specific_errors:
-                        val_errors += f'<li>Non field specific &rarr; {val}</li>'
-                    val_errors += '</ul>'
-                raise Exception(f"Validation error(s) on row(s): {', '.join([str(err.number) for err in result.invalid_rows])} <br>{val_errors}")
+                        val_errors += f"<li>Non field specific &rarr; {val}</li>"
+                    val_errors += "</ul>"
+                raise Exception(
+                    f"Validation error(s) on row(s): {', '.join([str(err.number) for err in result.invalid_rows])} <br>{val_errors}"
+                )
             elif result.has_errors():
-                raise Exception(f"Error detected that prevents importing on row(s): {', '.join([str(num) for num, _ in result.row_errors()])}")
+                raise Exception(
+                    f"Error detected that prevents importing on row(s): {', '.join([str(num) for num, _ in result.row_errors()])}"
+                )
             else:
                 fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
-            
+
             self.success("Fly file imported successfully!")
 
 
@@ -117,7 +126,7 @@ class FlyApp(ModelAdminWidget):
 
     USE_DETAILS_TO_EDIT = False  # required to have form in NEW_TAB
 
-    STATIC_FILES = ['flydb/icon.css']  # required for the menu icon CSS
+    STATIC_FILES = ["flydb/icon.css"]  # required for the menu icon CSS
 
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
     ORQUESTRA_MENU = "left"
@@ -149,8 +158,8 @@ class FlyApp(ModelAdminWidget):
             '<i class="upload icon"></i>Import',
             default=self.__import_evt,
             label_visible=False,
-            css='basic blue',
-            helptext='Import Fly from CSV file',
+            css="basic blue",
+            helptext="Import Fly from CSV file",
         )
 
         super().__init__(*args, **kwargs)
