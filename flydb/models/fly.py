@@ -119,13 +119,14 @@ class Fly(AbstractFly):
     )
 
     # FIXME remove the legacy fields, keep the origin fields below
-    legacysource = models.ForeignKey(
-        "LegacySource",
-        null=True,
-        blank=True,
-        verbose_name="Source",
-        on_delete=models.SET_NULL,
-    )
+    # legacysource = models.ForeignKey(
+    #     "LegacySource",
+    #     null=True,
+    #     blank=True,
+    #     verbose_name="Source",
+    #     on_delete=models.SET_NULL,
+    # )
+    legacysource = models.CharField(max_length=30, verbose_name="Legacy Source", blank=True)
     legacy1 = models.CharField(max_length=30, verbose_name="Legacy ID 1", blank=True)
     legacy2 = models.CharField(max_length=30, verbose_name="Legacy ID 2", blank=True)
     legacy3 = models.CharField(max_length=30, verbose_name="Legacy ID 3", blank=True)

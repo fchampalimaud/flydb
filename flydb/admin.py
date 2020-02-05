@@ -12,8 +12,8 @@ from users.models import Group
 
 class FlyResource(resources.ModelResource):
     origin_center = Field(attribute='origin_center', column_name='origin_center', widget=ForeignKeyWidget(StockCenter, 'name'))
-    species = Field(attribute='species', column_name='species', widget=ForeignKeyWidget(Species, 'specie_name'))   
-    legacysource = Field(attribute='legacysource', column_name='legacysource', widget=ForeignKeyWidget(LegacySource, 'legacysource_name'))   
+    species = Field(attribute='species', column_name='species', widget=ForeignKeyWidget(Species, 'specie_name'))
+    # legacysource = Field(attribute='legacysource', column_name='legacysource', widget=ForeignKeyWidget(LegacySource, 'legacysource_name'))
     origin_internal = Field(attribute='origin_internal', column_name='origin_internal', widget=ForeignKeyWidget(Group, 'name'))
     categories = Field(attribute='categories', column_name='categories', widget=ManyToManyWidget(Category, field='name'))
     maintainer = Field(attribute='maintainer', column_name='maintainer', widget=ForeignKeyWidget(settings.AUTH_USER_MODEL, 'name'))
