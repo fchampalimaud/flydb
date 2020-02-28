@@ -17,6 +17,8 @@ from .fly_form import FlyForm
 # FIXME fix this import when users model is not present
 from users.apps._utils import limit_choices_to_database
 
+from django.urls import reverse
+
 
 class FlyImportWidget(BaseWidget):
     TITLE = "Import Fly"
@@ -162,11 +164,21 @@ class FlyApp(ModelAdminWidget):
             helptext="Import Fly from CSV file",
         )
 
+        url = reverse('get_fly_template')
+
+        self._download_btn = ControlButton(
+            '<i class="download icon"></i>Template',
+            default='window.open("{0}");'.format(url),
+            label_visible=False,
+            css="basic blue",
+            helptext="Download Fly template as a CSV file",
+        )
+
         super().__init__(*args, **kwargs)
 
     def get_toolbar_buttons(self, has_add_permission=False):
         toolbar = super().get_toolbar_buttons(has_add_permission)
-        return (toolbar, "_import_btn", "_unknown_filter")
+        return (toolbar, "_import_btn", "_download_btn", "_unknown_filter")
 
     def get_queryset(self, request, qs):
         if self._unknown_filter.value:
