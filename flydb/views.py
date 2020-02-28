@@ -5,6 +5,10 @@ from django.conf import settings
 from .models import Fly
 import simplejson, datetime, socket, sys
 
+from flydb.admin import FlyResource
+import csv
+from django.http import HttpResponse
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
@@ -14,6 +18,21 @@ def get_client_ip(request):
         ip = request.META.get("REMOTE_ADDR")
     return ip
 
+@login_required
+def get_fly_template(request):
+    fly_resource = FlyResource()
+    dataset = fly_resource.export()
+    
+    # prepare response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="fly_template.csv"'
+
+    csv_list = dataset.csv.rstrip().split(',')
+
+    writer = csv.writer(response)
+    writer.writerow(csv_list)
+
+    return response
 
 @login_required
 def print_barcode(request, fly_url):
