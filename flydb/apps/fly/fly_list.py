@@ -1,6 +1,7 @@
 import os
 from os.path import dirname
 import shutil
+import logging
 
 from confapp import conf
 from pyforms_web.basewidget import BaseWidget
@@ -18,6 +19,9 @@ from .fly_form import FlyForm
 from users.apps._utils import limit_choices_to_database
 
 from django.urls import reverse
+
+
+logger = logging.getLogger(__name__)
 
 
 class FlyImportWidget(BaseWidget):
@@ -77,6 +81,14 @@ class FlyImportWidget(BaseWidget):
                     f"Validation error(s) on row(s): {', '.join([str(err.number) for err in result.invalid_rows])} <br>{val_errors}"
                 )
             elif result.has_errors():
+                msg = f'ERRORS: '.join([
+                    ''.join([
+                        f'row: {str(err.row["internal_id"])}, ownership: {str(err.row["ownership"])}, error: {str(err.error)}\n'
+                        for err in err_lst
+                    ])
+                    for _, err_lst in result.row_errors()
+                ])
+                logger.debug(msg)
                 raise Exception(
                     f"Error detected that prevents importing on row(s): {', '.join([str(num) for num, _ in result.row_errors()])}"
                 )
