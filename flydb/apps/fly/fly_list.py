@@ -88,7 +88,7 @@ class FlyImportWidget(BaseWidget):
                     ])
                     for _, err_lst in result.row_errors()
                 ])
-                logger.debug(msg)
+                logger.error(msg)
                 raise Exception(
                     f"Error detected that prevents importing on row(s): {', '.join([str(num) for num, _ in result.row_errors()])}"
                 )
