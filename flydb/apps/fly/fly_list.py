@@ -94,8 +94,7 @@ class FlyImportWidget(BaseWidget):
                 )
             else:
                 fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
-
-            self.success("Fly file imported successfully!")
+                self.success("Fly file imported successfully!")
 
 
 class FlyApp(ModelAdminWidget):
