@@ -8,6 +8,7 @@ from . import models
 from .models import Fly, Species, Category, Location, LegacySource, Source, StockCenter, Hospitalization
 from users.models import Group
 from django.contrib.auth import get_user_model
+from datetime import datetime
 
 
 class FlyResource(resources.ModelResource):
@@ -18,10 +19,40 @@ class FlyResource(resources.ModelResource):
     maintainer = Field(attribute='maintainer', column_name='maintainer', widget=ForeignKeyWidget(get_user_model(), 'name'))
     ownership = Field(attribute='ownership', column_name='ownership', widget=ForeignKeyWidget(Group, 'name'))
 
+    _original_values = {}
+    _date_fields = ['created', 'modified']
+    
     class Meta:
         model = Fly
         skip_unchanged = True
         clean_model_instances = True
+
+    def before_save_instance(self, instance, using_transactions, dry_run):
+        # temporarily disable the auto_now and auto_now_add for importing the dates used in the import file
+        lst = self.Meta.model._meta.local_fields
+        # when these fields are defined it means a bulk import, if not, we want the current date
+        if instance.created and instance.modified:
+            for field in lst:
+                if field.column in self._date_fields:
+                    self._original_values[field.column] = {
+                        'auto_now': field.auto_now,
+                        'auto_now_add': field.auto_now_add,
+                    }
+                    field.auto_now = False
+                    field.auto_now_add = False
+        else:
+            instance.created = instance.modified = datetime.now()
+            
+        return super().before_save_instance(instance, using_transactions, dry_run)
+
+    def after_save_instance(self, instance, using_transactions, dry_run):
+        # re-enable the auto_now and auto_now_add with the original_values
+        lst = self.Meta.model._meta.local_fields
+        for el in lst:
+            if el.column in self._date_fields:
+                el.auto_now = self._original_values[el.column]['auto_now']
+                el.auto_now_add = self._original_values[el.column]['auto_now_add']
+        return super().after_save_instance(instance, using_transactions, dry_run)
 
 
 @admin.register(models.Fly)
