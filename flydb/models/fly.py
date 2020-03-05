@@ -118,18 +118,6 @@ class Fly(AbstractFly):
         max_length=30, verbose_name="Local", blank=True
     )
 
-    # FIXME remove the legacy fields, keep the origin fields below
-    # legacysource = models.ForeignKey(
-    #     "LegacySource",
-    #     null=True,
-    #     blank=True,
-    #     verbose_name="Source",
-    #     on_delete=models.SET_NULL,
-    # )
-    legacysource = models.CharField(max_length=30, verbose_name="Legacy Source", blank=True)
-    legacy1 = models.CharField(max_length=30, verbose_name="Legacy ID 1", blank=True)
-    legacy2 = models.CharField(max_length=30, verbose_name="Legacy ID 2", blank=True)
-    legacy3 = models.CharField(max_length=30, verbose_name="Legacy ID 3", blank=True)
     origin_internal = models.ForeignKey(
         to="users.Group",
         on_delete=models.PROTECT,
@@ -144,7 +132,6 @@ class Fly(AbstractFly):
     )
     origin_id = models.CharField(max_length=20, verbose_name="Original ID", blank=True)
     origin_obs = models.TextField(verbose_name="Observations", blank=True)
-    # TODO legacy fields are deprecated, do not use
 
     died = models.BooleanField(verbose_name="Stock is dead")  # TODO change to is_dead
 
@@ -244,22 +231,6 @@ class Fly(AbstractFly):
             genotype += self.chr4.strip()
 
         return genotype.strip()
-
-    def legacy(self):
-        """
-        FIXME deprecated, use the origin fields instead
-        """
-        result = []
-        if self.legacy1:
-            result.append(self.legacy1)
-
-        if self.legacy2:
-            result.append(self.legacy2)
-
-        if self.legacy3:
-            result.append(self.legacy3)
-
-        return " | ".join(result)
 
     def save(self, *args, **kwargs):
         self.genotype = self.get_genotype()

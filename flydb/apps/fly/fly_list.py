@@ -129,9 +129,6 @@ class FlyApp(ModelAdminWidget):
 
     SEARCH_FIELDS = [
         "internal_id__icontains",
-        "legacy1__icontains",
-        "legacy2__icontains",
-        "legacy3__icontains",
         "genotype__icontains",
         "location__icontains",
         "comments__icontains",

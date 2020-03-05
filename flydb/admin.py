@@ -5,7 +5,7 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from . import models
-from .models import Fly, Species, Category, Location, LegacySource, Source, StockCenter, Hospitalization
+from .models import Fly, Species, Category, StockCenter
 from users.models import Group
 from django.contrib.auth import get_user_model
 from datetime import datetime
@@ -63,7 +63,6 @@ class FlyAdmin(ImportMixin, ExportActionMixin, admin.ModelAdmin):
 admin.site.register(models.Species)
 admin.site.register(models.Category)
 admin.site.register(models.Location)
-admin.site.register(models.LegacySource)
 admin.site.register(models.Source)
 admin.site.register(models.StockCenter)
 admin.site.register(models.Hospitalization)
