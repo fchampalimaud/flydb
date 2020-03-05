@@ -82,7 +82,7 @@ class Fly(AbstractFly):
         null=True,
         blank=True,
         related_name="fly_stocks",
-    )  # FIXME use users.Group
+    )
 
     # TODO what about stocks belonging to a group but managed by the platform?
     # consider using a flag
