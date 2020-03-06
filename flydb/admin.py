@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils import timezone
 from import_export import resources, widgets
 from import_export.admin import ExportActionMixin, ImportMixin
 from import_export.fields import Field
@@ -8,7 +9,6 @@ from . import models
 from .models import Fly, Species, Category, Location, LegacySource, Source, StockCenter, Hospitalization
 from users.models import Group
 from django.contrib.auth import get_user_model
-from datetime import datetime
 
 
 class FlyResource(resources.ModelResource):
@@ -21,6 +21,7 @@ class FlyResource(resources.ModelResource):
 
     _original_values = {}
     _date_fields = ['created', 'modified']
+    _generated_dates = False
     
     class Meta:
         model = Fly
@@ -41,17 +42,19 @@ class FlyResource(resources.ModelResource):
                     field.auto_now = False
                     field.auto_now_add = False
         else:
-            instance.created = instance.modified = datetime.now()
+            instance.created = instance.modified = timezone.now()
+            self._generated_dates = True
             
         return super().before_save_instance(instance, using_transactions, dry_run)
 
     def after_save_instance(self, instance, using_transactions, dry_run):
         # re-enable the auto_now and auto_now_add with the original_values
-        lst = self.Meta.model._meta.local_fields
-        for el in lst:
-            if el.column in self._date_fields:
-                el.auto_now = self._original_values[el.column]['auto_now']
-                el.auto_now_add = self._original_values[el.column]['auto_now_add']
+        if not self._generated_dates:
+            lst = self.Meta.model._meta.local_fields
+            for field in lst:
+                if field.column in self._date_fields:
+                    field.auto_now = self._original_values[field.column]['auto_now']
+                    field.auto_now_add = self._original_values[field.column]['auto_now_add']
         return super().after_save_instance(instance, using_transactions, dry_run)
 
 
