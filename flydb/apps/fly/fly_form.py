@@ -94,7 +94,6 @@ class FlyForm(FormPermissionsMixin, ModelFormWidget):
             ),
             segment(
                 "h3:Origin",
-                # ('legacysource', 'legacy1', 'legacy2', 'legacy3'),
                 (
                     "origin",
                     "origin_center",

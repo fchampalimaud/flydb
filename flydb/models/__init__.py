@@ -1,4 +1,3 @@
-from .legacy_source import LegacySource
 from .location import Location
 from .source import Source
 from .species import Species
