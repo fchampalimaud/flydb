@@ -186,7 +186,7 @@ class FlyApp(ModelAdminWidget):
 
     def get_toolbar_buttons(self, has_add_permission=False):
         toolbar = super().get_toolbar_buttons(has_add_permission)
-        return tuple([no_columns(toolbar, "_import_btn", "_download_btn")] + [" ", "_unknown_filter"])
+        return (toolbar, "_import_btn", "_download_btn", "_unknown_filter")
 
     def get_queryset(self, request, qs):
         if self._unknown_filter.value:
