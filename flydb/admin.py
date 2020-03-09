@@ -28,7 +28,7 @@ class FlyResource(resources.ModelResource):
         model = Fly
         skip_unchanged = True
         clean_model_instances = True
-        exclude = ('id',)
+        exclude = ('id', 'printable_comment', 'genotype', 'created', 'modified')
         export_order = ('species', 'flybase_id', 'internal_id', 'location', 'categories', 'died', 'public', 
                         'origin', 'origin_center', 'origin_id', 'origin_obs', 
                         'chrx', 'chry', 'chr2', 'chr3', 'chr4', 'bal1', 'bal2', 'bal3', 'chru',
