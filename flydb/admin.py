@@ -30,7 +30,7 @@ class FlyResource(resources.ModelResource):
         clean_model_instances = True
         exclude = ('id', 'printable_comment', 'genotype', 'created', 'modified')
         export_order = ('species', 'flybase_id', 'internal_id', 'location', 'categories', 'died', 'public', 
-                        'origin', 'origin_center', 'origin_id', 'origin_obs', 
+                        'origin', 'origin_center', 'origin_internal', 'origin_external', 'origin_id', 'origin_obs',
                         'chrx', 'chry', 'chr2', 'chr3', 'chr4', 'bal1', 'bal2', 'bal3', 'chru',
                         'wolbachia', 'wolbachia_treatment_date', 'virus_treatment_date', 'isogenization_background', 'special_husbandry_conditions',
                         'line_description', 'comments' )
