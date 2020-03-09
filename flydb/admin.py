@@ -9,6 +9,7 @@ from . import models
 from .models import Fly, Species, Category, StockCenter
 from users.models import Group
 from django.contrib.auth import get_user_model
+from datetime import datetime
 
 
 class FlyResource(resources.ModelResource):
@@ -27,6 +28,16 @@ class FlyResource(resources.ModelResource):
         model = Fly
         skip_unchanged = True
         clean_model_instances = True
+
+    def before_import_row(self, row, **kwargs):
+        for field, value in row.items():
+            if field in self._date_fields:
+                # check if the value is a float and convert to datetime here
+                if isinstance(value, float):
+                    import xlrd
+                    row[field] = datetime(*xlrd.xldate_as_tuple(value, 0), tzinfo=timezone.get_current_timezone())
+
+        return super().before_import_row(row, **kwargs)
 
     def before_save_instance(self, instance, using_transactions, dry_run):
         # temporarily disable the auto_now and auto_now_add for importing the dates used in the import file
