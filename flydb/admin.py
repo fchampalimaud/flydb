@@ -28,6 +28,7 @@ class FlyResource(resources.ModelResource):
         model = Fly
         skip_unchanged = True
         clean_model_instances = True
+        exclude = ('id',)
 
     def before_import_row(self, row, **kwargs):
         for field, value in row.items():
