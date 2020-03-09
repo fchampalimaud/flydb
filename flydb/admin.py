@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils import timezone
 from import_export import resources, widgets
 from import_export.admin import ExportActionMixin, ImportMixin
 from import_export.fields import Field
@@ -21,11 +22,28 @@ class FlyResource(resources.ModelResource):
 
     _original_values = {}
     _date_fields = ['created', 'modified']
+    _generated_dates = False
     
     class Meta:
         model = Fly
         skip_unchanged = True
         clean_model_instances = True
+        exclude = ('id', 'printable_comment', 'genotype', 'created', 'modified')
+        export_order = ('species', 'flybase_id', 'internal_id', 'location', 'categories', 'died', 'public', 
+                        'origin', 'origin_center', 'origin_internal', 'origin_external', 'origin_id', 'origin_obs',
+                        'chrx', 'chry', 'chr2', 'chr3', 'chr4', 'bal1', 'bal2', 'bal3', 'chru',
+                        'wolbachia', 'wolbachia_treatment_date', 'virus_treatment_date', 'isogenization_background', 'special_husbandry_conditions',
+                        'line_description', 'comments' )
+
+    def before_import_row(self, row, **kwargs):
+        for field, value in row.items():
+            if field in self._date_fields:
+                # check if the value is a float and convert to datetime here
+                if isinstance(value, float):
+                    import xlrd
+                    row[field] = datetime(*xlrd.xldate_as_tuple(value, 0), tzinfo=timezone.get_current_timezone())
+
+        return super().before_import_row(row, **kwargs)
 
     def before_save_instance(self, instance, using_transactions, dry_run):
         # temporarily disable the auto_now and auto_now_add for importing the dates used in the import file
@@ -41,17 +59,19 @@ class FlyResource(resources.ModelResource):
                     field.auto_now = False
                     field.auto_now_add = False
         else:
-            instance.created = instance.modified = datetime.now()
+            instance.created = instance.modified = timezone.now()
+            self._generated_dates = True
             
         return super().before_save_instance(instance, using_transactions, dry_run)
 
     def after_save_instance(self, instance, using_transactions, dry_run):
         # re-enable the auto_now and auto_now_add with the original_values
-        lst = self.Meta.model._meta.local_fields
-        for el in lst:
-            if el.column in self._date_fields:
-                el.auto_now = self._original_values[el.column]['auto_now']
-                el.auto_now_add = self._original_values[el.column]['auto_now_add']
+        if not self._generated_dates:
+            lst = self.Meta.model._meta.local_fields
+            for field in lst:
+                if field.column in self._date_fields:
+                    field.auto_now = self._original_values[field.column]['auto_now']
+                    field.auto_now_add = self._original_values[field.column]['auto_now_add']
         return super().after_save_instance(instance, using_transactions, dry_run)
 
 

@@ -2,6 +2,7 @@ import os
 from os.path import dirname
 import shutil
 import logging
+import tablib
 
 from confapp import conf
 from pyforms_web.basewidget import BaseWidget
@@ -34,7 +35,7 @@ class FlyImportWidget(BaseWidget):
     def __init__(self, *args, **kwargs):
         super().__init__()
 
-        self._csv_file = ControlFileUpload(label="Import CSV")
+        self._csv_file = ControlFileUpload(label="Select file (CSV in UTF-8, XLS or XLSX)", helptext="Supported formats: CSV in UTF-8, XLS or XLSX")
         self._import_btn = ControlButton(
             '<i class="upload icon"></i>Import',
             default=self.__import_evt,
@@ -49,15 +50,16 @@ class FlyImportWidget(BaseWidget):
 
         fly_resource = FlyResource()
 
-        if self._csv_file.filepath is not None:
-            dataset = Dataset()
+        path = self._csv_file.filepath
+        _, file_extension = os.path.splitext(path)
 
+        if path and (path.endswith('.csv') or path.endswith('.xls') or path.endswith('.xlsx')):
             try:
-                with open(self._csv_file.filepath, "r") as f:
-                    imported_file = dataset.load(f.read())
+                with open(self._csv_file.filepath, "r" if file_extension is '.csv' else "rb" ) as f:
+                    dataset = tablib.import_set(f.read(), format=file_extension[1:])
             except UnsupportedFormat as uf:
                 raise Exception(
-                    "Unsupported format. Please select a CSV file with the Fly template columns"
+                    "Unsupported format. Please select a CSV in UTF-8, XLS or XLSX file with the Fly template columns"
                 )
             finally:
                 shutil.rmtree(dirname(self._csv_file.filepath))
@@ -95,6 +97,8 @@ class FlyImportWidget(BaseWidget):
             else:
                 fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
                 self.success("Fly file imported successfully!")
+        else:
+            self.alert("Input file format not recognized. Please use either CSV (UTF-8) or XLSX")
 
 
 class FlyApp(ModelAdminWidget):
