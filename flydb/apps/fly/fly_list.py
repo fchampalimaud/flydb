@@ -55,7 +55,7 @@ class FlyImportWidget(BaseWidget):
 
         if path and (path.endswith('.csv') or path.endswith('.xls') or path.endswith('.xlsx')):
             try:
-                with open(self._csv_file.filepath, "r" if file_extension is '.csv' else "rb" ) as f:
+                with open(self._csv_file.filepath, 'r' if file_extension == '.csv' else 'rb' ) as f:
                     dataset = tablib.import_set(f.read(), format=file_extension[1:])
             except UnsupportedFormat as uf:
                 raise Exception(
