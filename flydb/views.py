@@ -5,7 +5,6 @@ from django.conf import settings
 from .models import Fly
 import simplejson, datetime, socket, sys
 
-from flydb.admin import FlyResource
 import csv
 from django.http import HttpResponse
 
@@ -20,19 +19,26 @@ def get_client_ip(request):
 
 @login_required
 def get_fly_template(request):
-    fly_resource = FlyResource()
-    dataset = fly_resource.export()
-    
+    fields = [item.name for item in Fly()._meta.get_fields()]
+
+    ignore_export = ['_state', 'id', 'printable_comment', 'genotype', 'created', 'modified', 'hospitalization', 'external_location']
+    header_list = ['species', 'flybase_id', 'internal_id', 'location', 'categories', 'died', 'public', 
+             'origin', 'origin_center', 'origin_internal', 'origin_external', 'origin_id', 'origin_obs',
+             'chrx', 'chry', 'chr2', 'chr3', 'chr4', 'bal1', 'bal2', 'bal3', 'chru',
+             'wolbachia', 'wolbachia_treatment_date', 'virus_treatment_date', 'isogenization_background', 'special_husbandry_conditions',
+             'line_description', 'comments']
+
+    # add those fields that are not in either list to the end of the header_list
+    for item in fields:
+        if item not in ignore_export and item not in header_list:
+            header_list.append(item)
+
     # prepare response
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="fly_template.csv"'
 
-    if dataset.csv:
-        header = dataset.csv.splitlines()
-        if len(header) > 0:
-            csv_list = header[0].split(',')
-            writer = csv.writer(response)
-            writer.writerow(csv_list)
+    writer = csv.writer(response)
+    writer.writerow(header_list)
 
     return response
 
