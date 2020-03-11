@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
+from django.core.exceptions import FieldDoesNotExist
+from django.db.models.fields import CharField
 from import_export import resources, widgets
 from import_export.admin import ExportActionMixin, ImportMixin
 from import_export.fields import Field
@@ -36,7 +38,18 @@ class FlyResource(resources.ModelResource):
                 if isinstance(value, float):
                     import xlrd
                     row[field] = datetime(*xlrd.xldate_as_tuple(value, 0), tzinfo=timezone.get_current_timezone())
-
+                else:
+                    # we need to add the timezone to the datetime
+                    row[field] = value.replace(tzinfo=timezone.get_current_timezone()).astimezone(tz=timezone.get_current_timezone())
+            if value is None:
+                # check default value for this field within the model and set it in the row value before proceeding
+                try:
+                    f = self._meta.model._meta.get_field(field)
+                except FieldDoesNotExist:
+                    continue
+                if f.blank is True and f.null is False:
+                    row[field] = ''
+                pass 
         return super().before_import_row(row, **kwargs)
 
     def before_save_instance(self, instance, using_transactions, dry_run):
