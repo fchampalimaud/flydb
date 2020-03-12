@@ -68,37 +68,44 @@ class FlyImportWidget(BaseWidget):
             result = fly_resource.import_data(
                 dataset, dry_run=True, use_transactions=True, collect_failed_rows=True
             )
-            if result.has_validation_errors():
+            if result.has_errors():
                 val_errors = ""
-                for err in result.invalid_rows:
-                    val_errors += f"row {err.number}:<br><ul>"
-                    for key in err.field_specific_errors:
-                        val_errors += (
-                            f"<li>{key} &rarr; {err.field_specific_errors[key][0]}</li>"
-                        )
-                    for val in err.non_field_specific_errors:
-                        val_errors += f"<li>Non field specific &rarr; {val}</li>"
-                    val_errors += "</ul>"
-                raise Exception(
-                    f"Validation error(s) on row(s): {', '.join([str(err.number) for err in result.invalid_rows])} <br>{val_errors}"
-                )
-            elif result.has_errors():
-                msg = f'ERRORS: '.join([
-                    ''.join([
-                        f'row: {str(err.row["internal_id"])}, ownership: {str(err.row["ownership"])}, error: {str(err.error)}\n'
-                        for err in err_lst
-                    ])
-                    for _, err_lst in result.row_errors()
-                ])
-                logger.error(msg)
-                raise Exception(
-                    f"Error detected that prevents importing on row(s): {', '.join([str(num) for num, _ in result.row_errors()])}"
-                )
+                errors_msg = ""
+                user_msg = ""
+
+                # gather all normal errors
+                row_errors = result.row_errors()
+                for row in row_errors:
+                    err_lst = row[1]
+                    for err in err_lst:
+                        errors_msg += f"<li>Stock {err.row['internal_id']} &rarr; {str(err.error)}</li>"
+                
+                if len(errors_msg) > 0:
+                    errors_msg = f"<ul>{errors_msg}</ul>"
+
+                # gather all validation errors
+                if result.has_validation_errors():
+                    for err in result.invalid_rows:
+                        val_errors += f"row {err.number - 1}:<br><ul>"
+                        for key in err.field_specific_errors:
+                            val_errors += (
+                                f"<li>{key} &rarr; {err.field_specific_errors[key][0]}</li>"
+                            )
+                        for val in err.non_field_specific_errors:
+                            val_errors += f"<li>Non field specific &rarr; {val}</li>"
+                        val_errors += "</ul>"
+
+                if len(errors_msg) > 0:
+                    user_msg += f"Errors detected that prevents importing on row(s):<br>{errors_msg}"
+                if len(val_errors) > 0:
+                    user_msg += f"Validation error(s) on row(s):<br>{val_errors}"
+                logger.error(user_msg)
+                raise Exception(user_msg)
             else:
                 fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
                 self.success("Fly file imported successfully!")
         else:
-            self.alert("Input file format not recognized. Please use either CSV (UTF-8) or XLSX")
+            self.alert("Input file format not recognized. Please use either CSV (UTF-8), XLS or XLSX")
 
 
 class FlyApp(ModelAdminWidget):
