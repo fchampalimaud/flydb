@@ -19,7 +19,7 @@ class FlyResource(resources.ModelResource):
     species = Field(attribute='species', column_name='species', widget=ForeignKeyWidget(Species, 'specie_name'))
     origin_internal = Field(attribute='origin_internal', column_name='origin_internal', widget=ForeignKeyWidget(Group, 'name'))
     categories = Field(attribute='categories', column_name='categories', widget=ManyToManyWidget(Category, field='name'))
-    maintainer = Field(attribute='maintainer', column_name='maintainer', widget=ForeignKeyWidget(get_user_model(), 'name'))
+    maintainer = Field(attribute='maintainer', column_name='maintainer', widget=ForeignKeyWidget(get_user_model(), 'email'))
     ownership = Field(attribute='ownership', column_name='ownership', widget=ForeignKeyWidget(Group, 'name'))
 
     _original_values = {}
