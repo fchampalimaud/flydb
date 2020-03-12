@@ -38,7 +38,7 @@ class FlyResource(resources.ModelResource):
                 if isinstance(value, float):
                     import xlrd
                     row[field] = datetime(*xlrd.xldate_as_tuple(value, 0), tzinfo=timezone.get_current_timezone())
-                else:
+                elif isinstance(value, datetime):
                     # we need to add the timezone to the datetime
                     row[field] = value.replace(tzinfo=timezone.get_current_timezone()).astimezone(tz=timezone.get_current_timezone())
             if value is None:
