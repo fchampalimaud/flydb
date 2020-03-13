@@ -78,7 +78,7 @@ class FlyImportWidget(BaseWidget):
                 for row in row_errors:
                     err_lst = row[1]
                     for err in err_lst:
-                        errors_msg += f"<li>Stock {err.row['internal_id']} &rarr; {str(err.error)}</li>"
+                        errors_msg += f"<li>Row #{row[0] - 1} &rarr; {str(err.error)}</li>"
                 
                 if len(errors_msg) > 0:
                     errors_msg = f"<ul>{errors_msg}</ul>"
@@ -86,7 +86,7 @@ class FlyImportWidget(BaseWidget):
                 # gather all validation errors
                 if result.has_validation_errors():
                     for err in result.invalid_rows:
-                        val_errors += f"row {err.number - 1}:<br><ul>"
+                        val_errors += f"Row #{err.number - 1}:<br><ul>"
                         for key in err.field_specific_errors:
                             val_errors += (
                                 f"<li>{key} &rarr; {err.field_specific_errors[key][0]}</li>"
