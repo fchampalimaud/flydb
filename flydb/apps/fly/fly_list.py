@@ -69,13 +69,15 @@ class FlyImportWidget(BaseWidget):
                 dataset, dry_run=True, use_transactions=True, collect_failed_rows=True
             )
             if result.has_errors():
+                import itertools
+                MAX_ERRORS_SHOWN = 3
                 val_errors = ""
                 errors_msg = ""
                 user_msg = ""
 
                 # gather all normal errors
                 row_errors = result.row_errors()
-                for row in row_errors:
+                for row in itertools.islice(row_errors, MAX_ERRORS_SHOWN):
                     err_lst = row[1]
                     for err in err_lst:
                         errors_msg += f"<li>Row #{row[0] - 1} &rarr; {str(err.error)}</li>"
@@ -85,7 +87,7 @@ class FlyImportWidget(BaseWidget):
 
                 # gather all validation errors
                 if result.has_validation_errors():
-                    for err in result.invalid_rows:
+                    for err in itertools.islice(result.invalid_rows, MAX_ERRORS_SHOWN):
                         val_errors += f"Row #{err.number - 1}:<br><ul>"
                         for key in err.field_specific_errors:
                             val_errors += (
