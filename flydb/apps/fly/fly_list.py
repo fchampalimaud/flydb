@@ -33,7 +33,7 @@ class FlyImportWidget(BaseWidget):
     HAS_CANCEL_BTN_ON_ADD = False
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
+        super().__init__(*args, **kwargs)
 
         self._csv_file = ControlFileUpload(label="Select file (CSV in UTF-8, XLS or XLSX)", helptext="Supported formats: CSV in UTF-8, XLS or XLSX")
         self._import_btn = ControlButton(
@@ -106,6 +106,7 @@ class FlyImportWidget(BaseWidget):
             else:
                 fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
                 self.success("Fly file imported successfully!")
+                self.parent.populate_list()
         else:
             self.alert("Input file format not recognized. Please use either CSV (UTF-8), XLS or XLSX")
 
