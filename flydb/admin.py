@@ -50,7 +50,7 @@ class FlyResource(resources.ModelResource):
                     continue
                 if f.blank is True and f.null is False:
                     row[field] = ''
-                pass 
+
         return super().before_import_row(row, **kwargs)
 
     def before_save_instance(self, instance, using_transactions, dry_run):
