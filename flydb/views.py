@@ -1,3 +1,4 @@
+import logging
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,6 +9,7 @@ import simplejson, datetime, socket, sys
 import csv
 from django.http import HttpResponse
 
+logger = logging.getLogger(__name__)
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
@@ -67,7 +69,12 @@ def print_barcode(request, fly_url):
     PORT = settings.PRINTER_SERVER_PORT
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    s.connect((HOST, PORT))
+    try:
+        s.connect((HOST, PORT))
+    except socket.error as e:
+        logger.error(e)
+        return HttpResponse('<h1 style="color:red;">Unable to establish connection to Printer server</h1><h2>Please make sure that the Printer server is running, close this tab and try again.</h2>') 
+
     s.send(message)
     s.close()
 
