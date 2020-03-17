@@ -51,6 +51,9 @@ class FlyImportWidget(BaseWidget):
         fly_resource = FlyResource()
 
         path = self._csv_file.filepath
+        if not path:
+            raise Exception('No file selected to import. Please select a file and try again.')
+        
         _, file_extension = os.path.splitext(path)
 
         if path and (path.endswith('.csv') or path.endswith('.xls') or path.endswith('.xlsx')):
@@ -102,11 +105,13 @@ class FlyImportWidget(BaseWidget):
                 if len(val_errors) > 0:
                     user_msg += f"Validation error(s) on row(s):<br>{val_errors}"
                 logger.error(user_msg)
+                self._csv_file.value = None
                 raise Exception(user_msg)
             else:
                 fly_resource.import_data(dataset, dry_run=False, use_transactions=True)
-                self.success("Fly file imported successfully!")
+                self.parent.success("Fly file imported successfully!")
                 self.parent.populate_list()
+                self.close()
         else:
             self.alert("Input file format not recognized. Please use either CSV (UTF-8), XLS or XLSX")
 
