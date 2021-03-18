@@ -150,6 +150,9 @@ class Fly(AbstractFly):
 
     objects = FlyQuerySet.as_manager()
 
+    class Meta:
+        permissions = [("can_import", "Can import from XLSX")]
+
     def clean(self):
         errors_dict = {"__all__": []}
         msg = "This field is required."
