@@ -8,6 +8,7 @@ from confapp import conf
 from pyforms_web.basewidget import BaseWidget
 from pyforms_web.organizers import no_columns, segment
 from pyforms.controls import ControlCheckBox, ControlFileUpload, ControlButton
+from pyforms_web.web.middleware import PyFormsMiddleware
 from pyforms_web.widgets.django import ModelAdminWidget
 from tablib.core import Dataset, UnsupportedFormat
 
@@ -205,7 +206,16 @@ class FlyApp(ModelAdminWidget):
 
     def get_toolbar_buttons(self, has_add_permission=False):
         toolbar = super().get_toolbar_buttons(has_add_permission)
-        return (toolbar, "_import_btn", "_download_btn", "_unknown_filter")
+
+        user = PyFormsMiddleware.user()
+        animaldb = self.model._meta.app_label
+
+        buttons = (toolbar, "_unknown_filter")
+
+        if user.has_perm(animaldb + ".can_import"):
+            buttons += ("_import_btn", "_download_btn")
+
+        return no_columns(*buttons)
 
     def get_queryset(self, request, qs):
         if self._unknown_filter.value:
